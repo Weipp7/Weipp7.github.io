@@ -155,28 +155,33 @@
     <article id="post-MyFirstBlog" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/14/MyFirstBlog/">MyFirstBlog_使用hexo搭建博客</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/14/MyFirstBlog/" class="archive-article-date">
+  	<time datetime="2021-06-14T11:52:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-14</time>
+</a>
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<p>title: MyFirstBlog<br>date: 2021-06-14 19:52:17<br>tags:</p>
+        <h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><blockquote>
+<p>本篇博客列举了使用hexo框架搭建博客的详细步骤，适用于Win10系统，涉及的应用主要为gitbash,github,部署自己的网站的方式是在github上发布，不需要另外花钱买域名</p>
+</blockquote>
 <h3 id="安装Nodejs"><a href="#安装Nodejs" class="headerlink" title="安装Nodejs"></a>安装Nodejs</h3><p>1.node -v 查看node版本</p>
-<p>2.npm -v 查看npm版本</p>
-<p>3.npm install -g cnpm –registry=<a target="_blank" rel="noopener" href="http://registry.npm.taobao.org/">http://registry.npm.taobao.org</a> 安装淘宝的cnpm管理器</p>
-<p>4.cnpm -v 查看cnpm版本</p>
-<p>5.cnpm install -g hexo-cli 安装hexo框架</p>
-<p>6.hexo -v 查看hexo版本</p>
-<p>7.mkdir blog 创建blog目录</p>
-<p>8.cd blog  进入blog目录</p>
-<p>9.hexo init  生成博客 初始化博客</p>
-<p>10.hexo s 启动本地博客服务</p>
-<p>11.<a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a> 本地访问地址</p>
-<p>12.hexo n 我的第一篇文章 创建新的文章 </p>
-<p>13.返回blog目录</p>
-<p>14.hexo clean 清理</p>
-<p>15.hexo g 生成</p>
-<p>16.Github创建一个新的仓库 YourGithubName.github.io</p>
-<p>17.cnpm install –save hexo-deployer-git 在blog目录下安装git部署插件</p>
-<p>18.配置_config.yml</p>
+<p>2.npm -v 查看npm版本<br><img src="./assert/no_1.png" alt="1"><br>3.npm install -g cnpm –registry=<a target="_blank" rel="noopener" href="http://registry.npm.taobao.org/">http://registry.npm.taobao.org</a> 安装淘宝的cnpm管理器<br><img src="./assert/no_2.png" alt="2"><br>4.cnpm -v 查看cnpm版本<br><img src="./assert/no_3.png" alt="3"><br>5.cnpm install -g hexo-cli 安装hexo框架<br><img src="./assert/no_4.png" alt="4"><br>6.hexo -v 查看hexo版本<br><img src="./assert/no_5.png" alt="5"><br>7.mkdir blog 创建blog目录</p>
+<p>8.cd blog  进入blog目录<br><img src="./assert/no_6.png" alt="6"><br>9.hexo init  生成博客 初始化博客<br><img src="./assert/no_7.png" alt="7"><br>10.hexo s 启动本地博客服务<br><img src="./assert/no_8.png" alt="8"><br>11.<a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a> 本地访问地址<br><img src="./assert/no_9.png" alt="9"><br>helloworld博客为自动生成</p>
+<p>12.hexo n 我的第一篇文章 创建新的文章<br>![10](./assert/no_10 .png)<br>13.返回blog目录</p>
+<p>14.hexo clean 清理<br><img src="./assert/no_11.png" alt="11"><br>15.hexo g 生成<br><img src="./assert/no_12.png" alt="12"><br>16.Github创建一个新的仓库 YourGithubName.github.io</p>
+<p>!一定要按照这个格式</p>
+<p>17.cnpm install –save hexo-deployer-git 在blog目录下安装git部署插件<br><img src="./assert/no_13.png" alt="13"><br>18.配置_config.yml</p>
 <pre><code>Deployment
  Docs: https://hexo.io/docs/deployment.html
 deploy:
@@ -190,10 +195,10 @@ branch: master
 <p><a target="_blank" rel="noopener" href="https://weipp7.github.io/">Mr P’s Blog</a></p>
 <p>20.git clone <a target="_blank" rel="noopener" href="https://github.com/litten/hexo-theme-yilia.git">https://github.com/litten/hexo-theme-yilia.git</a> themes/yilia  下载yilia主题到本地</p>
 <p>21.修改hexo根目录下的 _config.yml 文件 ： theme: yilia</p>
-<p>22.hexo c 清理一下</p>
-<p>23.hexo g 生成</p>
-<p>24.hexo d 部署到远程Github仓库</p>
-<p>25.<a target="_blank" rel="noopener" href="https://yourgithubname.github.io/">https://YourGithubName.github.io/</a>  查看博客</p>
+<p>22.hexo c或者hexo clean 清理一下<br><img src="./assert/no_14.png" alt="14"><br>23.hexo g 生成<br><img src="./assert/no_15.png" alt="15"><br>24.hexo d 部署到远程Github仓库<br><img src="./assert/no_16.png" alt="16"><br>25.<a target="_blank" rel="noopener" href="https://yourgithubname.github.io/">https://YourGithubName.github.io/</a>  查看博客</p>
+<blockquote>
+<p>在部署成功后，如想要修改博客内容，可以用vscode打开文件，按需修改。修改后通过gitbash依次执行hexo c,hexo g,hexo d.即已经将修改的内容同步到云端。</p>
+</blockquote>
 
       
 
