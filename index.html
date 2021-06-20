@@ -176,13 +176,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>问题描述：在写第一篇博客时，图片在md文件中能够正常显示，而在网页上浏览时显示上传失败。查了资料发现原因是md中的文件路径使用相对路径，page到网页上时路径失效，找不到本地存图片的文件，因此加载失败。想解决这个问题，需要将本地图片page到网上生成网链（md可辨别的）。</p>
-<p>做法：</p>
-<p>1.在github上新建仓库作为图床<br>2.在issue中点击new issues<br><img src="https://user-images.githubusercontent.com/73998546/122338823-cdbeff80-cf72-11eb-98a0-c7af3504da7c.png" alt="1 (1)"></p>
-<p>3.将图片拖入输入框</p>
-<p>4.在preview中可以预览图片样式</p>
-<p>5.在write中生成的链接可以再md中直接应用<br><img src="https://user-images.githubusercontent.com/73998546/122338817-cbf53c00-cf72-11eb-8527-09a51858866b.png" alt="1 (2)"></p>
-<p>完成！撒花✿✿ヽ(°▽°)ノ✿</p>
-
+        
+          <a class="article-more-a" href="/2021/06/17/build-the-drawing-bed-on-github/#more">more >></a>
+        
       
 
       
@@ -247,31 +243,9 @@
         <h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><blockquote>
 <p>本篇博客列举了使用hexo框架搭建博客的详细步骤，适用于Win10系统，涉及的应用主要为gitbash,github,部署自己的网站的方式是在github上发布，不需要另外花钱买域名</p>
 </blockquote>
-<h3 id="安装Nodejs"><a href="#安装Nodejs" class="headerlink" title="安装Nodejs"></a>安装Nodejs</h3><p>1.node -v 查看node版本</p>
-<p>2.npm -v 查看npm版本<br><img src="https://user-images.githubusercontent.com/73998546/122335260-93069880-cf6d-11eb-999d-5505df0c3a07.png" alt="1"><br>3.npm install -g cnpm –registry=<a target="_blank" rel="noopener" href="http://registry.npm.taobao.org/">http://registry.npm.taobao.org</a> 安装淘宝的cnpm管理器<br><img src="https://user-images.githubusercontent.com/73998546/122335263-93069880-cf6d-11eb-8f0f-4975604207c2.png" alt="2"><br>4.cnpm -v 查看cnpm版本<br><img src="https://user-images.githubusercontent.com/73998546/122335266-939f2f00-cf6d-11eb-86a2-c1800cccfa3c.png" alt="3"><br>5.cnpm install -g hexo-cli 安装hexo框架<br><img src="https://user-images.githubusercontent.com/73998546/122335236-8d10b780-cf6d-11eb-843c-1357dff90e1c.png" alt="4"><br>6.hexo -v 查看hexo版本<br><img src="https://user-images.githubusercontent.com/73998546/122335240-8e41e480-cf6d-11eb-9b60-9467366c60ef.png" alt="5"><br>7.mkdir blog 创建blog目录</p>
-<p>8.cd blog  进入blog目录<br><img src="https://user-images.githubusercontent.com/73998546/122335241-8eda7b00-cf6d-11eb-9ee3-0e75a080539c.png" alt="6"><br>9.hexo init  生成博客 初始化博客<br><img src="https://user-images.githubusercontent.com/73998546/122335243-8eda7b00-cf6d-11eb-9020-1c515386dbd8.png" alt="7"><br>10.hexo s 启动本地博客服务<br><img src="https://user-images.githubusercontent.com/73998546/122335244-8f731180-cf6d-11eb-9946-7b58db51bc84.png" alt="8"><br>11.<a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a> 本地访问地址<br><img src="https://user-images.githubusercontent.com/73998546/122335245-900ba800-cf6d-11eb-99f0-0f4293526f48.png" alt="9"><br>helloworld博客为自动生成</p>
-<p>12.hexo n 我的第一篇文章 创建新的文章<br><img src="https://user-images.githubusercontent.com/73998546/122335248-900ba800-cf6d-11eb-8e9b-32b19a1527a7.png" alt="10"><br>13.返回blog目录</p>
-<p>14.hexo clean 清理<br><img src="https://user-images.githubusercontent.com/73998546/122335251-90a43e80-cf6d-11eb-94db-6db0674be431.png" alt="11"><br>15.hexo g 生成<br><img src="https://user-images.githubusercontent.com/73998546/122335253-913cd500-cf6d-11eb-986c-a736979155a4.png" alt="12"><br>16.Github创建一个新的仓库 YourGithubName.github.io</p>
-<p>!一定要按照这个格式</p>
-<p>17.cnpm install –save hexo-deployer-git 在blog目录下安装git部署插件<br><img src="https://user-images.githubusercontent.com/73998546/122335254-913cd500-cf6d-11eb-8e21-5ba5a28e09b2.png" alt="13"><br>18.配置_config.yml</p>
-<pre><code>Deployment
- Docs: https://hexo.io/docs/deployment.html
-deploy:
-type: git
-repo: https://github.com/YourGithubName/YourGithubName.github.io.git
-branch: master
-</code></pre>
-<p>19.hexo d 部署到Github仓库里</p>
-<pre><code>https://YourGithubName.github.io/  访问这地址可以查看博客
-</code></pre>
-<p><a target="_blank" rel="noopener" href="https://weipp7.github.io/">Mr P’s Blog</a></p>
-<p>20.git clone <a target="_blank" rel="noopener" href="https://github.com/litten/hexo-theme-yilia.git">https://github.com/litten/hexo-theme-yilia.git</a> themes/yilia  下载yilia主题到本地</p>
-<p>21.修改hexo根目录下的 _config.yml 文件 ： theme: yilia</p>
-<p>22.hexo c或者hexo clean 清理一下<br><img src="https://user-images.githubusercontent.com/73998546/122335256-91d56b80-cf6d-11eb-9d34-4f0b52547866.png" alt="14"><br>23.hexo g 生成<br><img src="https://user-images.githubusercontent.com/73998546/122335257-926e0200-cf6d-11eb-9237-635056ab2469.png" alt="15"><br>24.hexo d 部署到远程Github仓库<br><img src="https://user-images.githubusercontent.com/73998546/122335259-926e0200-cf6d-11eb-8ffa-dc0d8ff56bd6.png" alt="16"><br>25.<a target="_blank" rel="noopener" href="https://yourgithubname.github.io/">https://YourGithubName.github.io/</a>  查看博客</p>
-<blockquote>
-<p>在部署成功后，如想要修改博客内容，可以用vscode打开文件，按需修改。修改后通过gitbash依次执行hexo c,hexo g,hexo d.即已经将修改的内容同步到云端。</p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2021/06/14/MyFirstBlog/#more">more >></a>
+        
       
 
       
@@ -284,6 +258,82 @@ branch: master
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/06/14/MyFirstBlog/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/14/hello-world/">Hello World</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/14/hello-world/" class="archive-article-date">
+  	<time datetime="2021-06-14T11:49:09.438Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+        
+          <a class="article-more-a" href="/2021/06/14/hello-world/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/14/hello-world/">展开全文 >></a>
         </p>
       
 
@@ -406,6 +456,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
