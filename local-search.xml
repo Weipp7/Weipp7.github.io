@@ -37,6 +37,18 @@
     <content type="html"><![CDATA[<h2 id="通过修改HOSTS文件进行加速"><a href="#通过修改HOSTS文件进行加速" class="headerlink" title="通过修改HOSTS文件进行加速"></a>通过修改HOSTS文件进行加速</h2><p>参考如下介绍</p><hr><h3 id="为什么github下载速度这么龟？"><a href="#为什么github下载速度这么龟？" class="headerlink" title="为什么github下载速度这么龟？"></a>为什么github下载速度这么龟？</h3><p>GitHub 我们都知道是世界上最大的开源及私有软件项目的托管平台，全世界每天有海量优秀的开源软件在这里产生，而 GitHub 在国内很多时候获取到的下载链接是亚马逊的服务器。</p><span id="more"></span><p>国内访问github，经常抽疯或龟速。</p><h3 id="如何提高github的下载速度？"><a href="#如何提高github的下载速度？" class="headerlink" title="如何提高github的下载速度？"></a>如何提高github的下载速度？</h3><p>手动把cdn和ip地址绑定。</p><h3 id="第一步：访问：这里-获取cdn和ip域名"><a href="#第一步：访问：这里-获取cdn和ip域名" class="headerlink" title="第一步：访问：这里 获取cdn和ip域名"></a>第一步：访问：<a href="http://github.global.ssl.fastly.net.ipaddress.com/#ipinfo">这里</a> 获取cdn和ip域名</h3><h3 id="第二步：获取github的global-ssl-fastly地址"><a href="#第二步：获取github的global-ssl-fastly地址" class="headerlink" title="第二步：获取github的global.ssl.fastly地址"></a>第二步：获取github的global.ssl.fastly地址</h3><p>得到：192.30.255.112</p><h3 id="第三步：获取github-com地址"><a href="#第三步：获取github-com地址" class="headerlink" title="第三步：获取github.com地址"></a>第三步：获取github.com地址</h3><p>得到：185.31.16.184</p><h3 id="第四步：修改host文件映射上面查找到的IP"><a href="#第四步：修改host文件映射上面查找到的IP" class="headerlink" title="第四步：修改host文件映射上面查找到的IP"></a>第四步：修改host文件映射上面查找到的IP</h3><p>windows系统：</p><p>找到C:\Windows\System32\drivers\etc\hosts<br>在<mark>最后写入 </p><p>192.30.255.112  github.com git</p><p>185.31.16.184 github.global.ssl.fastly.net</p><h3 id="第五步：在cmd中输入：ping-github-com即可"><a href="#第五步：在cmd中输入：ping-github-com即可" class="headerlink" title="第五步：在cmd中输入：ping github.com即可"></a>第五步：在cmd中输入：ping github.com即可</h3>]]></content>
     
     
+    <categories>
+      
+      <category>github</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>实用技能</tag>
+      
+    </tags>
     
   </entry>
   
@@ -50,6 +62,18 @@
     <content type="html"><![CDATA[<p>问题描述：在写第一篇博客时，图片在md文件中能够正常显示，而在网页上浏览时显示上传失败。查了资料发现原因是md中的文件路径使用相对路径，page到网页上时路径失效，找不到本地存图片的文件，因此加载失败。想解决这个问题，需要将本地图片page到网上生成网链（md可辨别的）。</p><span id="more"></span><p>做法：</p><p>1.在github上新建仓库作为图床<br>2.在issue中点击new issues<br><img src="https://user-images.githubusercontent.com/73998546/122338823-cdbeff80-cf72-11eb-98a0-c7af3504da7c.png" alt="1 (1)"></p><p>3.将图片拖入输入框</p><p>4.在preview中可以预览图片样式</p><p>5.在write中生成的链接可以再md中直接应用<br><img src="https://user-images.githubusercontent.com/73998546/122338817-cbf53c00-cf72-11eb-8527-09a51858866b.png" alt="1 (2)"></p><p>完成！撒花✿✿ヽ(°▽°)ノ✿</p>]]></content>
     
     
+    <categories>
+      
+      <category>github</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>实用技能</tag>
+      
+    </tags>
     
   </entry>
   
