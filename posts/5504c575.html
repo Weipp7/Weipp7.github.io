@@ -18,9 +18,25 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>归档 - Hexo</title>
+  <title>方法重写 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -53,7 +69,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -168,9 +184,54 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="你就是打死我，我也不改这个bug">
+            <span class="h2" id="subtitle" title="方法重写">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-26 22:57" pubdate>
+        2021年8月26日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      427 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      4
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
 
             
           </div>
@@ -183,64 +244,122 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 5 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2021</p>
-    
-    <a href="/posts/5504c575.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">方法重写</span>
-      <time style="float: right;">08-26</time>
-    </a>
-  
-    
-    <a href="/posts/af55167d.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">final关键字</span>
-      <time style="float: right;">08-26</time>
-    </a>
-  
-    
-    <a href="/posts/28877bf.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">异常处理</span>
-      <time style="float: right;">08-25</time>
-    </a>
-  
-    
-    <a href="/posts/ceb1ca5c.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">github访问加速</span>
-      <time style="float: right;">06-21</time>
-    </a>
-  
-    
-    <a href="/posts/96102aeb.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">build the drawing bed on github</span>
-      <time style="float: right;">06-17</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">方法重写</h1>
+            
+            <div class="markdown-body">
+              <p>发生在类的继承中，这个方法子和父名称一样，子生效<br><a name="44XsM"></a></p>
+<h3 id="重写（override）规则："><a href="#重写（override）规则：" class="headerlink" title="重写（override）规则："></a>重写（override）规则：</h3><ol>
+<li>参数列表必须完全与被重写方法相同</li>
+<li>返回类型必须完全与被重写的返回类型相同</li>
+<li>访问权限不能比父类中被重写的访问权限更低。例如：如果父类的一个方法被声明为public，name子类中重写该方法就不能声明为protected</li>
+<li>父类的成员方法只能被他的子类重写</li>
+<li>声明为static和private的方法不能被重写，但是能够被再次声明<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo1</span></span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> stsic <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>&#123;<br>        Student s = <span class="hljs-keyword">new</span> Student();<br>        s.say();<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say</span><span class="hljs-params">()</span></span>&#123;<br>        System.<span class="hljs-function">out <span class="hljs-title">println</span><span class="hljs-params">(<span class="hljs-string">&quot;锄禾日当午，汗滴禾下土&quot;</span>)</span></span><br><span class="hljs-function">        &#125;</span><br><span class="hljs-function">&#125;</span><br><span class="hljs-function"></span><br><span class="hljs-function">class Student extends Person</span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say</span><span class="hljs-params">()</span></span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;床前明月光&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+</ol>
+<p><a name="Gotao"></a></p>
+<h4 id="注意：面试题：Java中重写（override）和重载（overland）的区别"><a href="#注意：面试题：Java中重写（override）和重载（overland）的区别" class="headerlink" title="注意：面试题：Java中重写（override）和重载（overland）的区别"></a>注意：面试题：Java中重写（override）和重载（overland）的区别</h4><ol>
+<li>重写是发生在子父类中的操作</li>
+<li>重载是一个类里面参数列表的长度、参数类型和参数类型顺序不同（分为构造方法重载和方法重载）</li>
+</ol>
+<p>a. 发生的位置<br />重载：一个类中<br />重写：子父类中<br />b. 参数列表限制<br />重载：必须不同<br />重写：必须相同<br />c. 返回值类型：<br />重载：与返回值类型无关<br />重写：返回值类型必须一致<br />d. 访问权限：<br />重载：与访问权限无关<br />重写： 子的方法权限 必须不能小于 父的方法权限<br />e.异常（bug）处理：<br />重载：与异常无关<br />重写：可以减少或删除（异常范围可以更小更精准，但是不能抛出新的异常）<br /><br><br /></p>
 
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/af55167d.html">
+                        <span class="hidden-mobile">final关键字</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"83dd2a243bcbd843a05a","clientSecret":"a302ebbd1e331a879fae28f46397391604cfcf4e","repo":"gitalk","owner":"Weipp7","admin":["Weipp7"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: 'b6319ebdd3b76d7aff2bbb9326a9c7d7'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" lazyload class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
     
 
     
@@ -344,9 +463,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
 
 

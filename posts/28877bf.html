@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>我的第一篇博客 - Hexo</title>
+  <title>异常处理 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -184,7 +184,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="我的第一篇博客">
+            <span class="h2" id="subtitle" title="异常处理">
               
             </span>
 
@@ -194,7 +194,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-25 22:00" pubdate>
+      <time datetime="2021-08-25 22:48" pubdate>
         2021年8月25日 晚上
       </time>
     </span>
@@ -206,7 +206,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      0 字
+      452 字
     </span>
   
 
@@ -216,7 +216,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      6
        分钟
     </span>
   
@@ -254,18 +254,62 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">我的第一篇博客</h1>
+            <h1 style="display: none">异常处理</h1>
             
             <div class="markdown-body">
-              
+              <p>情况描述：当程序出现bug时，Java虚拟机发现异常，虚拟机就会new出来一个新的对象，用类似返回的方式返回错误类型和异常原因，同时中断程序。</p>
+<h3 id="处理异常"><a href="#处理异常" class="headerlink" title="处理异常"></a>处理异常</h3><p>对异常进行处理，捕获异常，避免异常返回使程序中断</p>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">try</span>&#123;<br>    <span class="hljs-comment">//有可能发生异常的代码</span><br>&#125;<span class="hljs-keyword">catch</span>(异常类型<span class="hljs-number">1</span> 对象名<span class="hljs-number">1</span>)&#123;<br>    <span class="hljs-comment">//异常的操作</span><br>&#125;<span class="hljs-keyword">catch</span>(异常类型<span class="hljs-number">1</span> 对象名<span class="hljs-number">1</span>)&#123;<br>    <span class="hljs-comment">//异常的操作</span><br>&#125;...<br><span class="hljs-keyword">finally</span>&#123;<br>    <span class="hljs-comment">//异常的统一出口</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>catch语句相当于if语句<br />如果满足异常类型，则实现代码块里面的操作<br /><br><br />易错警告<br />eg1.</p>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.java.demo1;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo6</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br><br>        Person p =haha();<br>        System.out.println(p.age);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Person <span class="hljs-title">haha</span><span class="hljs-params">()</span></span>&#123;<br>        Person p = <span class="hljs-keyword">new</span> Person();<br>       <span class="hljs-keyword">try</span>&#123;<br>           p.age = <span class="hljs-number">18</span>;<br>           <span class="hljs-keyword">return</span> p;<br>       &#125;<span class="hljs-keyword">finally</span>&#123;<br>           p.age = <span class="hljs-number">28</span>;<br>       &#125;<br><br>    &#125;<br>    <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>&#123;<br>        <span class="hljs-keyword">int</span> age;<br>    &#125;<br>&#125;<br><span class="hljs-comment">//始终是一个对象，最后执行finally，p.age年龄被更改</span><br></code></pre></div></td></tr></table></figure>
+
+<p>eg2.</p>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.java.demo1;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo7</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br><br>        <span class="hljs-keyword">int</span> a =haha();<br>        System.out.println(a);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">haha</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;<br>        <span class="hljs-keyword">try</span>&#123;<br>            <span class="hljs-keyword">return</span> a;<br>        &#125;<span class="hljs-keyword">finally</span>&#123;<br>            a = <span class="hljs-number">20</span>;<br>        &#125;<br><br>    &#125;<br><br>&#125;<br><span class="hljs-comment">//return a;中的a是被备份的那个</span><br><span class="hljs-comment">//实际上又开辟了一块内存空间，这是返回的a和finally中的赋值的a无关</span><br></code></pre></div></td></tr></table></figure>
+
+<p>eg3.</p>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.java.demo1;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo8</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        haha();<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">haha</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">try</span>&#123;<br>            <span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;<br>            <span class="hljs-keyword">int</span> b = <span class="hljs-number">0</span>;<br>            System.out.println(a/b);<br>        &#125;<br>        <span class="hljs-keyword">catch</span>(Exception e)&#123;<br>            <span class="hljs-comment">//退出JVM</span><br>            System.exit(<span class="hljs-number">0</span>);<br>        &#125;<span class="hljs-keyword">finally</span> &#123;<br>            System.out.println(<span class="hljs-string">&quot;锄禾日当午，汗滴禾下土&quot;</span>);<br><br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+
+<p>唯一一种在代码中使finally不执行的代码就是上述eg3.<br /> System.exit(0);<br />总结：finally问题总绕不开两点：<br />1.finally必然执行<br />2.return的时机以及备份的具体内容</p>
+
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+                    
+                  </div>
+                
                 
               </div>
               
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/af55167d.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">final关键字</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/ceb1ca5c.html">
+                        <span class="hidden-mobile">github访问加速</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 
@@ -284,7 +328,7 @@
         var options = Object.assign(
           {"clientID":"83dd2a243bcbd843a05a","clientSecret":"a302ebbd1e331a879fae28f46397391604cfcf4e","repo":"gitalk","owner":"Weipp7","admin":["Weipp7"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'c840cdc9d60e59f2c8e31f7fdc91028e'
+            id: '2dab967c86da08883b2276544c6bd0a3'
           }
         )
         var gitalk = new Gitalk(options);

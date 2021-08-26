@@ -201,26 +201,32 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/posts/undefined.html" target="_self">
-          <img src="/img/blog/cat2.jpg" srcset="/img/loading.gif" lazyload alt="我的第一篇博客">
+        <a href="/posts/5504c575.html" target="_self">
+          <img src="/img/blog/cat2.jpg" srcset="/img/loading.gif" lazyload alt="方法重写">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/posts/undefined.html" target="_self">
-          我的第一篇博客
+        <a href="/posts/5504c575.html" target="_self">
+          方法重写
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/posts/undefined.html" target="_self">
+        <a href="/posts/5504c575.html" target="_self">
           
           
             
           
-          
+          发生在类的继承中，这个方法子和父名称一样，子生效
+重写（override）规则：
+参数列表必须完全与被重写方法相同
+返回类型必须完全与被重写的返回类型相同
+访问权限不能比父类中被重写的访问权限更低。例如：如果父类的一个方法被声明为public，name子类中重写该方法就不能声明为protected
+父类的成员方法只能被他的子类重写
+声明为static和private的方法不能被重写，但是能够被再次
         </a>
       </p>
 
@@ -228,11 +234,18 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-25 22:00" pubdate>
-              2021-08-25
+            <time datetime="2021-08-26 22:57" pubdate>
+              2021-08-26
             </time>
           </div>
         
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
         
         
       </div>
@@ -243,27 +256,26 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/posts/4a17b156.html" target="_self">
-          <img src="/img/blog/cat2.jpg" srcset="/img/loading.gif" lazyload alt="Hello World">
+        <a href="/posts/af55167d.html" target="_self">
+          <img src="/img/blog/cat2.jpg" srcset="/img/loading.gif" lazyload alt="final关键字">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/posts/4a17b156.html" target="_self">
-          Hello World
+        <a href="/posts/af55167d.html" target="_self">
+          final关键字
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/posts/4a17b156.html" target="_self">
+        <a href="/posts/af55167d.html" target="_self">
           
           
             
           
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick
+          final用于修饰属性、变量变量成为了常量，无法对其再次进行赋值final修饰的局部变量，只能赋值一次（可以先声明后赋值）final修饰的是成员属性，必须在声明时赋值全局常量（public static final）常量的命名规范：由一个或多个单词组成，单词与单词之间必须使用下划线隔开，单词中所有字母大写例如：SQL_INSETfinal用于修饰类final修饰的类，不可以被继承final用于修饰
         </a>
       </p>
 
@@ -271,11 +283,69 @@ Quick
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-25 21:37" pubdate>
+            <time datetime="2021-08-26 22:54" pubdate>
+              2021-08-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/28877bf.html" target="_self">
+          <img src="/img/blog/cat2.jpg" srcset="/img/loading.gif" lazyload alt="异常处理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/28877bf.html" target="_self">
+          异常处理
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/posts/28877bf.html" target="_self">
+          
+          
+            
+          
+          情况描述：当程序出现bug时，Java虚拟机发现异常，虚拟机就会new出来一个新的对象，用类似返回的方式返回错误类型和异常原因，同时中断程序。
+处理异常对异常进行处理，捕获异常，避免异常返回使程序中断
+12345678910try&#123;    //有可能发生异常的代码&#125;catch(异常类型1 对象名1)&#123;    //异常的操作&#125;catch(异常类型1 对象名1)
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-25 22:48" pubdate>
               2021-08-25
             </time>
           </div>
         
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
         
         
       </div>
