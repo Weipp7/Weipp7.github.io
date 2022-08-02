@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>测试文章</title>
+    <link href="/posts/7a6a6b5a.html"/>
+    <url>/posts/7a6a6b5a.html</url>
+    
+    <content type="html"><![CDATA[<p>这是一篇测试文章。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>学习笔记</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>SAT问题及DPLL简述</title>
     <link href="/posts/935b2a8c.html"/>
     <url>/posts/935b2a8c.html</url>
