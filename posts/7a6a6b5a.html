@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>测试文章 - Hexo</title>
+  <title>BERT-BiLSTM-CRF - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -179,12 +179,12 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/panda.jpg') no-repeat center center;
+         style="background: url('https://user-images.githubusercontent.com/73998546/182521959-df17f189-c427-4a99-a38b-1b52ce78de4e.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="测试文章">
+            <span class="h2" id="subtitle" title="BERT-BiLSTM-CRF">
               
             </span>
 
@@ -206,7 +206,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      9 字
+      1.8k 字
     </span>
   
 
@@ -216,7 +216,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      19
        分钟
     </span>
   
@@ -254,10 +254,41 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">测试文章</h1>
+            <h1 style="display: none">BERT-BiLSTM-CRF</h1>
             
             <div class="markdown-body">
-              <h3 id="这是一篇测试文章。"><a href="#这是一篇测试文章。" class="headerlink" title="这是一篇测试文章。"></a>这是一篇测试文章。</h3><h2 id="lalala"><a href="#lalala" class="headerlink" title="lalala"></a>lalala</h2>
+              <h1 id="BERT-CRF模型分析"><a href="#BERT-CRF模型分析" class="headerlink" title="BERT-CRF模型分析"></a>BERT-CRF模型分析</h1><p>上学期搞大创的时候接触了NER相关的模型和知识，暑假终于有时间整理一下乐</p>
+<p>首先先了解一下BERT-BiLSTM-CRF的应用场景，这种方法主要用于命名实体识别。简单来讲，就是在一段语料中抽出其中的名词进行划分。<br>先上例子，以提取公司企业和人物实体为例：</p>
+<p><code>输入： &#123;&quot;text&quot;: &quot;作为蔚来汽车的 a 轮投资人，刘二海已经是第二次见证李斌在纽交所敲钟，第一次是李斌创办的易车在纽交所上市。&#125;</code><br><code>输出： &#123;&quot;label&quot;: &#123;&quot;person&quot;: &#123;&quot;刘二海&quot;: [13, 15]&#125;, &quot;org&quot;: &#123;&quot;蔚来汽车&quot;: [2，5]&#125;&#125;&#125;</code></p>
+<p>输入一段文本 text，输出的标签为句子中的organization 和 person 实体</p>
+<p>需要明确的是，BERT-BiLSTM-CRF是有监督分类问题，训练语料一定要给出训练文本对应的标注。</p>
+<p>那么我们如何从一段语料中“聪明地”获取实体并打上标签呢？<br>上模型！</p>
+<h3 id="模型框架"><a href="#模型框架" class="headerlink" title="模型框架"></a>模型框架</h3><p><img src="https://user-images.githubusercontent.com/73998546/182521959-df17f189-c427-4a99-a38b-1b52ce78de4e.png" srcset="/img/loading.gif" lazyload alt="模型框架"></p>
+<p>BERT-CRF 模型由 3 个模块组成。首先使用 BERT 模型获取字向量，提<br>取文本重要特征；之后由 BiLSTM 层对 BERT 的输出序列处理，通过双向 LSTM 计算输入隐藏信息；<br>在CRF层，结合 CRF 中的状态转移矩阵，根<br>据相邻之间标签得到一个全局最优序列。</p>
+<h4 id="BERT层"><a href="#BERT层" class="headerlink" title="BERT层"></a>BERT层</h4><p>模型第一层是利用预训练的 BERT 语言模型初始化获取输入文本信息中的字向量记为<br>序列 E=(e1,e2,e3,⋯ ,en) , 所获取的字向量能够利用词与词之间的相互关<br>系</p>
+<p>BERT 是一种自然语言处理预训练语言表征模型. BERT 能够计算词语之间的相互关系, 并利用所计算的关系调节权重提取文本中的重要特征, 利用自注意力机制的结构来进行预<br>训练, 基于所有层融合左右两侧语境来预训练深度双向表征, 比起以往的预训练模型, 它捕<br>捉到的是真正意义上的上下文信息, 并能够学习到连续文本片段之间的关系.</p>
+<h4 id="BiLSTM"><a href="#BiLSTM" class="headerlink" title="BiLSTM"></a>BiLSTM</h4><p>想要知道BiLSTM是什么，需要先了解LSTM是干嘛的</p>
+<p>LSTM 长短期记忆网络<br>是一种特殊的循环神经网络。RNN 网络主要包括输入层、隐藏层和输出层三部分组成，<br>隐藏层连接前后两层，这种特殊的结构，能让 RNN 网络具有一定的“记忆能力，能够有效<br>处理命名实体识别任务。</p>
+<h5 id="LSTM框架"><a href="#LSTM框架" class="headerlink" title="LSTM框架"></a>LSTM框架</h5><p><img src="https://user-images.githubusercontent.com/73998546/182525122-b3fe78f8-650e-419b-9b72-7ba250c895db.png" srcset="/img/loading.gif" lazyload alt="LSTM框架"><br>LSTM模型可以理解为：现在有一串细胞代表着不同时刻的状态（C0，C1…Ct），他们是串联关系。在t时刻，你有三个输入，分别为上一细胞状态Ct-1、隐藏层ht-1和输入词Xt。在经过细胞Ct后，你将得到本细胞的隐藏信息ht和此时新的细胞状态Ct。<br>在每个细胞中具体有遗忘门，记忆门和输出门，让我们看看这些可爱的小细胞是如何工作的吧</p>
+<p><strong>计算过程</strong><br>计算过程的思路就是，将遗忘信息和新的信息整合起来，得到有用的信息传递给下一细胞，同时丢弃无用信息。并在每一时刻输出隐层状态ht，ht相当于一个中间参数，参与到下一层的信息计算中。</p>
+<ul>
+<li><p>计算<strong>遗忘门</strong><br><code>输入：前一时刻隐藏状态ht-1,输入词Xt</code><br><code>输出：遗忘门的值ft</code><br><img src="https://user-images.githubusercontent.com/73998546/182526393-185580bb-f2f9-45bf-97bd-59b6785bf134.png" srcset="/img/loading.gif" lazyload alt="遗忘门"></p>
+</li>
+<li><p>计算<strong>记忆门</strong><br><code>输入：前一时刻隐藏状态ht-1,输入词Xt</code><br><code>输出：记忆门的值it，临时细胞状态Ct</code><br><img src="https://user-images.githubusercontent.com/73998546/182526419-d7ee10bb-90cb-437a-91c1-30a965ddd351.png" srcset="/img/loading.gif" lazyload alt="记忆门"></p>
+</li>
+<li><p>更新<strong>细胞状态</strong><br><code>输入：记忆门的值it，遗忘门的值ft，上一细胞状态Ct-1，临时细胞状态Ct</code><br><code>输出：当前细胞状态Ct</code><br><img src="https://user-images.githubusercontent.com/73998546/182526444-b82c367d-ef01-4241-a43f-a6d82012efef.png" srcset="/img/loading.gif" lazyload alt="细胞状态更新"></p>
+</li>
+<li><p>计算<strong>隐藏层</strong><br><code>输入：前一时刻隐藏状态ht-1,输入词Xt ，当前细胞状态Ct</code><br><code>输出：隐层状态ht</code><br><img src="https://user-images.githubusercontent.com/73998546/182526465-c75c0560-5471-4e96-8188-0d826f189c57.png" srcset="/img/loading.gif" lazyload alt="最后输出"></p>
+</li>
+</ul>
+<p>一顿操作下来，我们得到了和原始句子一样长的隐层状态序列[h0,h1…hn-1]</p>
+<h5 id="BiLSTM框架"><a href="#BiLSTM框架" class="headerlink" title="BiLSTM框架"></a>BiLSTM框架</h5><p>知道了LSTM的计算流程，他是从一个方向得到状态序列。进一步想，我们如果从两个方向（从左到右，从右到左）进行LSTM的运算，并将两个结果合并，是否能得到更全面的语义信息呢</p>
+<p>SMART GUY!这就是BiLSTM的思路。</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/182528230-0d562287-b91b-42eb-928b-660ed09b89f2.png" srcset="/img/loading.gif" lazyload alt="BiLSTM框架"><br>我们对一句话进行两个方向的LSTM计算，最后将两者捏在一起。这样每个词和前后的词都存在关联性，在ner中能表现出更好的性能。</p>
+<h4 id="CRF层"><a href="#CRF层" class="headerlink" title="CRF层"></a>CRF层</h4><p>CRF 用来分割和标记序列数据, 根据输入的观察序列来预测对应的状态序列, 同时考<br>虑输入的当前状态特征和各个标签类别转移特征, 被广泛应用于 NER 的问题中.</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/182520083-e46c0fd1-f27d-409a-8a49-b4a2d5ffb3de.png" srcset="/img/loading.gif" lazyload alt="CRF层"><br>如上图可知，BiLSTM层输出全文的向量表示后，得到这个词对应每个标签的权重。<br>CRF层会选取权重较高的标签，注意不是最高。他还会从训练数据中学习约束，确保选取标签的合理性。<br>CRF 层可以为最终预测的标签添加一些约束（如句子中第一个单词的标签应该以“B-”或“O”开头，而不是“I-”、“B-label1 I-label2 I-label3 I-…”，<br>在这个模式中，label1、label2、label3…应该是同一个命名实体标签），以减少无效预测标签序列的数量。这些约束可以在训练过程中由 CRF 层自动从训练数据集中学习。<br><em>约束可能是：<br>句子中第一个单词的标签应该以“B-”或“O”开头，而不是“I-” “B-label1 I-label2 I-label3 I-…”，在这个模式中，label1、label2、label3…应该是同一个命名实体标签。例如，“B-Person I-Person”有效，但“B-Person I-Organization”无效。<br>“O I-label”无效。一个命名实体的第一个标签应该以“B-”而不是“I-”开头，换句话说，有效模式应该是“O B-label</em></p>
+<p>再回头梳理一遍<strong>模型IO</strong><br><code>原始输入：语句文本</code><br><strong>BERT 层</strong>：<br><code>输入：</code><br>①由原始文本利用 word2Vector 等算法得到的原始字向量<br>②文本向量：该向量的取值在模型训练过程中自动学习，用于刻画文本的全局语义信息，<br>并与单字/词的语义信息相融合<br>③位置向量：刻画不同位置的字，对不同位置的字附加一个不同的向量加以区分<br><code>输出：文本中各个字融合了全文语义信息后的向量表示</code><br><strong>BiLSTM层</strong>：<br><code>输入：BERT 模型的输出序列</code><br><code>输出：每个字对应的标签权重</code><br><strong>CRF 层</strong>：<br><code>输入：每个字对应的标签权重</code><br><code>输出：预测的标签序列</code><br><img src="https://user-images.githubusercontent.com/73998546/182521959-df17f189-c427-4a99-a38b-1b52ce78de4e.png" srcset="/img/loading.gif" lazyload alt="image"><br>复习一下前面的图~<br>over</p>
+
             </div>
             <hr>
             <div>
@@ -266,10 +297,19 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+                      <a class="hover-with-bg" href="/categories/NER/">NER</a>
                     
                   </div>
                 
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/NER/">NER</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
+                    
+                  </div>
                 
               </div>
               
