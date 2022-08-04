@@ -18,9 +18,25 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>归档 - Hexo</title>
+  <title>关系三重提取的新框架 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -53,7 +69,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -168,9 +184,54 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="你就是打死我，我也不改这个bug">
+            <span class="h2" id="subtitle" title="关系三重提取的新框架">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-08-04 18:08" pubdate>
+        2022年8月4日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      764 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
 
             
           </div>
@@ -183,46 +244,116 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 8 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2021</p>
-    
-    <a href="/posts/ceb1ca5c.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">github访问加速</span>
-      <time style="float: right;">06-21</time>
-    </a>
-  
-    
-    <a href="/posts/96102aeb.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">build the drawing bed on github</span>
-      <time style="float: right;">06-17</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">关系三重提取的新框架</h1>
+            
+            <div class="markdown-body">
+              <h2 id="CASREL模型的分析"><a href="#CASREL模型的分析" class="headerlink" title="CASREL模型的分析"></a>CASREL模型的分析</h2><p>在做知识图谱的工作时，我们面临的首要问题是对一段语料进行实体识别(NER)和关系抽取(RE)。</p>
+<p><del>啥？知识图谱是啥？</del></p>
+<blockquote>
+<p>A knowledge graph, also known as a semantic network, represents a network of real-world entities—i.e. objects, events, situations, or concepts—and illustrates the relationship between them. This information is usually stored in a graph database and visualized as a graph structure, prompting the term knowledge “graph.”</p>
+</blockquote>
+<p><img src="https://user-images.githubusercontent.com/73998546/182825426-f5f2a104-51eb-4ccd-b340-5a990a1c615a.png" srcset="/img/loading.gif" lazyload alt="知识图谱"></p>
+<p>简而言之，我们现实生活中的一切都可以用三元组（主语，关系，宾语）表示，抽象到图的数据结构中，圈圈代表主语和宾语，连接圈圈的箭头表示关系。</p>
+<p>知识图谱的关键成分是关系事实，其中大部分由两个实体组成，由语义关系连接。 这些事实是以（主语，关系，宾语）或（s，r，o）的形式，称为关系三元组。</p>
+<p>在之前的做法中，针对关系提取最早的做法是<strong>管道方法</strong>。它首先识别句子中的所有实体，然后对每个实体对进行关系分类。这种方法往往会受到错误传播问题的影响，因为早期阶段的错误无法在早期阶段得到纠正。</p>
+<p>为了解决这个问题，后续大牛们提出了<strong>实体和关系的联合学习</strong>，其中有基于特征的模型以及神经网络模型。但是现有方法不能有效处理一个句子包含多个关系三元组的情况。<br>而且这些提取重叠三元组的工作仍有很多不足之处。</p>
+<p>我们来看看当有多个三元组时，可能会出现的问题：</p>
+<p>Normal：<font color=Green>华科</font>学生<font color=Green>wpy</font>邀请<font color=Green>腾讯</font>老板<font color=Green>马化腾</font>上模电课<br>关系三元组：（wpy，就读于，华科），（马化腾，CEO，腾讯）</p>
+<p>EPO:<font color=Green>姜文</font>在他导演的<font color=Green>让子弹飞</font>中出演张麻子<br>关系三元组：（姜文，出演，让子弹飞），（姜文，导演，让子弹飞）</p>
+<p>SEO：<font color=Green>我</font>出生在<font color=Green>河南</font>，<font color=Green>郑州</font><br>关系三元组：（我，出生地，河南），（我，出生地，郑州），（郑州，是…省会，河南）</p>
+<blockquote>
+<p>EPO:EntityPairOverlap<br>SEO:SingleEntityOverlap overlapping patterns.</p>
+</blockquote>
+<p>面对上面的三元组重叠问题，现有方法都不能很好的解决。</p>
+<p>具体来说，它们都将关系视为分配给实体对的离散标签。这个公式使关系分类成为一个困难的机器学习问题。<strong>首先</strong>，<strong>类分布高度不平衡</strong>。在所有提取的实体对中，大多数都没有形成有效的关系，产生了太多的反面例子。<strong>其次，当同一实体参与多个有效关系（重叠三元组）时，分类器可能会混淆。</strong>如果没有足够的训练样本，分类器很难分辨出实体参与了哪个关系。因此，提取的三元组是通常不完整和不准确。</p>
+<p>之前看了一篇论文，觉得里面提出的关系抽取的想法很有趣，遂记录下来</p>
+<p>参考论文<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1909.03227.pdf">A Novel Cascade Binary Tagging Framework for<br>Relational Triple Extraction</a></p>
 
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/7a6a6b5a.html">
+                        <span class="hidden-mobile">BERT-BiLSTM-CRF</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"83dd2a243bcbd843a05a","clientSecret":"a302ebbd1e331a879fae28f46397391604cfcf4e","repo":"gitalk","owner":"Weipp7","admin":["Weipp7"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":false,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.href","title":"document.title"},
+          {
+            id: 'affed7fb5e20b64a7b7d3c38c31e7db9'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -326,9 +457,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
 
 
