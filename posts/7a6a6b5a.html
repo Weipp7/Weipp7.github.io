@@ -257,7 +257,7 @@
             <h1 style="display: none">BERT-BiLSTM-CRF</h1>
             
             <div class="markdown-body">
-              <h1 id="BERT-CRF模型分析"><a href="#BERT-CRF模型分析" class="headerlink" title="BERT-CRF模型分析"></a>BERT-CRF模型分析</h1><p>上学期搞大创的时候接触了NER相关的模型和知识，暑假终于有时间整理一下乐</p>
+              <h1 id="BERT-BiLSTM-CRF模型分析"><a href="#BERT-BiLSTM-CRF模型分析" class="headerlink" title="BERT-BiLSTM-CRF模型分析"></a>BERT-BiLSTM-CRF模型分析</h1><p>上学期搞大创的时候接触了NER相关的模型和知识，暑假终于有时间整理一下乐</p>
 <p>首先先了解一下BERT-BiLSTM-CRF的应用场景，这种方法主要用于命名实体识别。简单来讲，就是在一段语料中抽出其中的名词进行划分。<br>先上例子，以提取公司企业和人物实体为例：</p>
 <p><code>输入： &#123;&quot;text&quot;: &quot;作为蔚来汽车的 a 轮投资人，刘二海已经是第二次见证李斌在纽交所敲钟，第一次是李斌创办的易车在纽交所上市。&#125;</code><br><code>输出： &#123;&quot;label&quot;: &#123;&quot;person&quot;: &#123;&quot;刘二海&quot;: [13, 15]&#125;, &quot;org&quot;: &#123;&quot;蔚来汽车&quot;: [2，5]&#125;&#125;&#125;</code></p>
 <p>输入一段文本 text，输出的标签为句子中的organization 和 person 实体</p>
@@ -287,7 +287,7 @@
 <p><img src="https://user-images.githubusercontent.com/73998546/182528230-0d562287-b91b-42eb-928b-660ed09b89f2.png" srcset="/img/loading.gif" lazyload alt="BiLSTM框架"><br>我们对一句话进行两个方向的LSTM计算，最后将两者捏在一起。这样每个词和前后的词都存在关联性，在ner中能表现出更好的性能。</p>
 <h4 id="CRF层"><a href="#CRF层" class="headerlink" title="CRF层"></a>CRF层</h4><p>CRF 用来分割和标记序列数据, 根据输入的观察序列来预测对应的状态序列, 同时考<br>虑输入的当前状态特征和各个标签类别转移特征, 被广泛应用于 NER 的问题中.</p>
 <p><img src="https://user-images.githubusercontent.com/73998546/182520083-e46c0fd1-f27d-409a-8a49-b4a2d5ffb3de.png" srcset="/img/loading.gif" lazyload alt="CRF层"><br>如上图可知，BiLSTM层输出全文的向量表示后，得到这个词对应每个标签的权重。<br>CRF层会选取权重较高的标签，注意不是最高。他还会从训练数据中学习约束，确保选取标签的合理性。<br>CRF 层可以为最终预测的标签添加一些约束（如句子中第一个单词的标签应该以“B-”或“O”开头，而不是“I-”、“B-label1 I-label2 I-label3 I-…”，<br>在这个模式中，label1、label2、label3…应该是同一个命名实体标签），以减少无效预测标签序列的数量。这些约束可以在训练过程中由 CRF 层自动从训练数据集中学习。<br><em>约束可能是：<br>句子中第一个单词的标签应该以“B-”或“O”开头，而不是“I-” “B-label1 I-label2 I-label3 I-…”，在这个模式中，label1、label2、label3…应该是同一个命名实体标签。例如，“B-Person I-Person”有效，但“B-Person I-Organization”无效。<br>“O I-label”无效。一个命名实体的第一个标签应该以“B-”而不是“I-”开头，换句话说，有效模式应该是“O B-label</em></p>
-<p>再回头梳理一遍<strong>模型IO</strong><br><code>原始输入：语句文本</code><br><strong>BERT 层</strong>：<br><code>输入：</code><br>①由原始文本利用 word2Vector 等算法得到的原始字向量<br>②文本向量：该向量的取值在模型训练过程中自动学习，用于刻画文本的全局语义信息，<br>并与单字/词的语义信息相融合<br>③位置向量：刻画不同位置的字，对不同位置的字附加一个不同的向量加以区分<br><code>输出：文本中各个字融合了全文语义信息后的向量表示</code><br><strong>BiLSTM层</strong>：<br><code>输入：BERT 模型的输出序列</code><br><code>输出：每个字对应的标签权重</code><br><strong>CRF 层</strong>：<br><code>输入：每个字对应的标签权重</code><br><code>输出：预测的标签序列</code><br><img src="https://user-images.githubusercontent.com/73998546/182521959-df17f189-c427-4a99-a38b-1b52ce78de4e.png" srcset="/img/loading.gif" lazyload alt="image"><br>复习一下前面的图~<br>over</p>
+<p>再回头梳理一遍<strong>模型IO</strong><br><code>原始输入：语句文本</code><br><strong>BERT 层</strong>：<br><code>输入：</code><br>①由原始文本利用 word2Vector 等算法得到的原始字向量<br>②文本向量：该向量的取值在模型训练过程中自动学习，用于刻画文本的全局语义信息，<br>并与单字/词的语义信息相融合<br>③位置向量：刻画不同位置的字，对不同位置的字附加一个不同的向量加以区分<br><code>输出：文本中各个字融合了全文语义信息后的向量表示</code><br><strong>BiLSTM层</strong>：<br><code>输入：BERT 模型的输出序列</code><br><code>输出：每个字对应的标签权重</code><br><strong>CRF 层</strong>：<br><code>输入：每个字对应的标签权重</code><br><code>输出：预测的标签序列</code><br><img src="https://user-images.githubusercontent.com/73998546/182521959-df17f189-c427-4a99-a38b-1b52ce78de4e.png" srcset="/img/loading.gif" lazyload alt=" "><br>复习一下前面的图~<br>over</p>
 
             </div>
             <hr>

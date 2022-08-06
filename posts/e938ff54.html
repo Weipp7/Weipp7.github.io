@@ -296,7 +296,7 @@
 <h5 id="Cascade-Decoder"><a href="#Cascade-Decoder" class="headerlink" title="Cascade Decoder"></a>Cascade Decoder</h5><p>首先，我们从输入句子中检测主体s。 然后对于每个候选主体s，我们检查所有可能的关系，看看是否有关系可以将句子中的对象与该主体s相关联。<br>这又分为两个模块</p>
 <h6 id="1-Subject-Tagger"><a href="#1-Subject-Tagger" class="headerlink" title="1.Subject Tagger"></a>1.Subject Tagger</h6><p>通过直接解码 N 层 BERT 编码器产生的编码向量 hN 来识别输入句子中所有可能的主体。<br>它采用两个相同的二元分类器来检测对象的开始和结束位置，如果概率超过某个特定阈值，则标记为 1，否则标签 0<br><img src="https://user-images.githubusercontent.com/73998546/182840329-1412ccd7-bbf6-4a23-8200-8aa8c167d459.png" srcset="/img/loading.gif" lazyload alt=" "><br>W是训练权重，xi=hn[i],b是偏差，derta是激活函数<br>此外论文中还提到了实体跨度的监测，在此不再赘述</p>
 <h6 id="2-Relation-specific-Object-Taggers"><a href="#2-Relation-specific-Object-Taggers" class="headerlink" title="2.Relation-specific Object Taggers"></a>2.Relation-specific Object Taggers</h6><p>所有对象标记器object taggers将同时为每个检测到的对象识别相应的对象。<br><img src="https://user-images.githubusercontent.com/73998546/182840360-96fc9871-1cb1-479a-844a-66a8e751e566.png" srcset="/img/loading.gif" lazyload alt=" "></p>
-<p>参考论文<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1909.03227.pdf">A Novel Cascade Binary Tagging Framework for Relational Triple Extraction</a></p>
+<p>参考论文<br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1909.03227.pdf">A Novel Cascade Binary Tagging Framework for Relational Triple Extraction</a></p>
 
             </div>
             <hr>
@@ -330,6 +330,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/posts/a8e0d3dd.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">AESINER模型分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
