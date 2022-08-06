@@ -8,9 +8,25 @@
     <link href="/posts/d92671ff.html"/>
     <url>/posts/d92671ff.html</url>
     
-    <content type="html"><![CDATA[<p>在以往的NER&amp;RE的任务中，很多方法都是基于复杂的手工特征和神经网络架构，这导致训练的时间和基于历史的预测时间较长。</p><p>现在呢，有大佬提出了一种新颖而简单的方法：基于<strong>表格表示</strong>从<strong>非结构化文本</strong>中提取命名实体和关系</p><p><code>输入：单词序列w1w2 ... wn（n 是输入中的单词数）</code></p><blockquote><p>Johanson Smith lives in London<br><code>输出：关系三元组（arg0type0，relation，arg1type1）</code><br>（Johanson_B-PER,LiveIn,London_U-LOC）<br>（Smith_B-PER,LiveIn,London_U-LOC）</p></blockquote>]]></content>
+    <content type="html"><![CDATA[<p>在以往的NER&amp;RE的任务中，很多方法都是基于复杂的手工特征和神经网络架构，这导致训练的时间和基于历史的预测时间较长。</p><p>现在呢，有大佬提出了一种新颖而简单的方法：基于<strong>表格表示</strong>从<strong>非结构化文本</strong>中提取命名实体和关系</p><p><code>输入：单词序列w1,w2 ... wn（n 是输入中的单词数）</code></p><blockquote><p>Johanson Smith lives in London</p></blockquote><p><code>输出：关系三元组（arg0type0，relation，arg1type1）</code></p><blockquote><p>（Johanson_B-PER,LiveIn,London_U-LOC）<br>（Smith_B-PER,LiveIn,London_U-LOC）</p></blockquote><p>具体怎么整呢。我们定义一个 n×n 上三角矩阵 Y ，其中对角元素 <strong>Yi,i</strong> ∈ E (1 ≤ i ≤ n) 表示<strong>词wi</strong>，非对角元素 <strong>Yi,j</strong> ∈ R(1 ≤ i &lt; j ≤ n) 表示有向关系单词 wi 和 wj 之间的**<strong>标签</strong>。</p><p>此模型可以看做将一系列单词 w1w,2 · · · wn映射到上三角矩阵</p><p><img src="https://user-images.githubusercontent.com/73998546/183257257-ea3bf94f-a5c2-4fd8-b974-0157fd4c382c.png" alt="上三角矩阵"></p><h2 id="模型框架"><a href="#模型框架" class="headerlink" title="模型框架"></a>模型框架</h2><p>该模型分为并行的两块，在到达Entity Representation层后，分别用不同的方法进行ner和re。也就是说，我们在 BERT 编码器之上执行 RE<br>识别实体之后，NER 模型填充 Y 中的所有对角线元素，RE 模型预测所有非对角元素。</p><p><img src="https://user-images.githubusercontent.com/73998546/183257289-9735816a-8a38-45c0-9dc0-f6a1783e326f.png" alt="模型框架"></p><h3 id="Named-Entity-Recognition"><a href="#Named-Entity-Recognition" class="headerlink" title="Named Entity Recognition"></a>Named Entity Recognition</h3><h4 id="BERT"><a href="#BERT" class="headerlink" title="BERT"></a>BERT</h4><p>BERT 分词器使用 WordPiece 拆分单词在 BPE 的帮助下转化为子词标记</p><blockquote><p>“Johanson” –&gt; “Johan”和”##son”</p></blockquote><p><code>输入：经WordPiece处理过的子词序列</code><br><code>输出：文本中各个子词融合了全文语义信息后的向量表示</code></p><h4 id="Word-level-Embedding"><a href="#Word-level-Embedding" class="headerlink" title="Word-level Embedding"></a>Word-level Embedding</h4><p>由于 NE 是在单词级别注释的，我们在训练和预测两个过程中都需要它在单词级别的表示。<br>计算方法如下：<br>Bert嵌入的子词标记组成词（eti,1,eti,2…eti,s）作为输入,ewi作为输出</p><p><img src="https://user-images.githubusercontent.com/73998546/183257538-c90f3dcd-f3cb-4b72-9259-ffd6fbbfc1ef.png" alt=" "></p><p>f表示一个最大池化操作，即对（eti,1,eti,2…eti,s）进行降维压缩，以某种方式取最大值</p><p><code>输入：子词向量</code><br><code>输出：池化后的word level的单词向量</code></p><h4 id="Entity-Representation"><a href="#Entity-Representation" class="headerlink" title="Entity Representation"></a>Entity Representation</h4><p><img src="https://user-images.githubusercontent.com/73998546/183257819-75c634af-abf8-434f-8043-2d8ce3f8b6aa.png" alt="Entity Representation"></p><p>计算方法如下：<br>①词wi的表示ewi<br>②上一个标签yi-1的embedding lyi−1<br>③<del>出现在时间步长上的前一个 NE 跨度的 BERT 嵌入的最大池化</del>（翻译成人话：上一个实体的向量表示）</p><blockquote><p>如上图的示例，③为上一个实体”Johanson Smith”的向量表示</p></blockquote><p>其中⊕代表向量连接。</p><p><img src="https://user-images.githubusercontent.com/73998546/183257900-65e248b0-e492-4753-be11-89dd8104c897.png" alt=" "></p><p>输入：①⊕②⊕③<br>输出：关系隐藏向量h</p><h4 id="Softmax-Classifier-of-NER"><a href="#Softmax-Classifier-of-NER" class="headerlink" title="Softmax Classifier of NER"></a>Softmax Classifier of NER</h4><p>之后应用一个全连接层，然后是一个softmax 函数 σ 在时间步 i 处获得所有可能的 NE 标签的概率分布，之后选择概率最高的y^i填充Yi,i (= yi)</p><p><img src="https://user-images.githubusercontent.com/73998546/183258044-c7e1f768-6904-42b7-86c3-15dbd23e1016.png" alt=" "></p><p><code>输入：关系隐藏向量h、矩阵w、线性变换的偏置向量b</code><br><code>输出：概率最高的标签y</code></p><h3 id="Relation-Extraction"><a href="#Relation-Extraction" class="headerlink" title="Relation Extraction"></a>Relation Extraction</h3><p>RE模型利用实体跨度和他们的NE标签以获得关系表示，用于预测关系标签。</p><p><img src="https://user-images.githubusercontent.com/73998546/183258323-bb980bfa-6fdb-4e98-bc91-a0acbf05084b.png" alt="RE模型"></p><h4 id="Word-Representation"><a href="#Word-Representation" class="headerlink" title="Word Representation"></a>Word Representation</h4><p>实体跨度特征 zi（在时间点 i）是使用实体跨度中组成词的表示来计算的：</p><p><img src="https://user-images.githubusercontent.com/73998546/183258388-b9770e0d-eb0e-4ed9-a724-b626b91a3728.png" alt=" "></p><p>换个说法，zi是从 first(i) 开始的,last（i）结束的实体跨度的单词表示的最大池化。<br>在数学上，单词表示，即 RE 模型的输入，是实体跨度和实体标签特征的串联，</p><p><img src="https://user-images.githubusercontent.com/73998546/183258558-8d424d6e-f6e2-49ed-a848-1020db450fba.png" alt=" "></p><p>生成qk矩阵张量</p><p><img src="https://user-images.githubusercontent.com/73998546/183259054-97cd14b3-0c2a-4c31-8338-07a0b2aa45eb.png" alt=" "></p><p><code>输入：实体跨度zi和实体标签特征lyi的串联</code><br><code>输出：qk矩阵张量</code></p><h4 id="Tensor-Dot-Product"><a href="#Tensor-Dot-Product" class="headerlink" title="Tensor Dot-Product"></a>Tensor Dot-Product</h4><p><code>输入：qk矩阵张量</code><br><code>输出：qk张量的点积</code></p><h4 id="Softmax-Classifier-of-RE"><a href="#Softmax-Classifier-of-RE" class="headerlink" title="Softmax Classifier of RE"></a>Softmax Classifier of RE</h4><p>Softmax 函数σ 计算所有的概率分布关系标签 R。我们用产生最高概率的关系标签记为y^i,j 。</p><p><img src="https://user-images.githubusercontent.com/73998546/183259181-b700d4d0-a49b-43ce-9483-e823811aa2d2.png" alt=" "></p><p><code>输入：qk张量的点积</code><br><code>输出：产生最高概率的关系标签y^i,j</code></p><p>参考论文<br><a href="https://www.jstage.jst.go.jp/article/jnlp/29/1/29_187/_pdf/-char/ja">Named Entity Recognition and Relation Extraction using Enhanced Table Filling by Contextualized Representations</a></p>]]></content>
     
     
+    <categories>
+      
+      <category>NER</category>
+      
+      <category>RE</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>NER</tag>
+      
+      <tag>RE</tag>
+      
+    </tags>
     
   </entry>
   
@@ -34,8 +50,6 @@
     <tags>
       
       <tag>NER</tag>
-      
-      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -64,8 +78,6 @@
       
       <tag>NER</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>RE</tag>
       
     </tags>
@@ -92,8 +104,6 @@
     <tags>
       
       <tag>NER</tag>
-      
-      <tag>Machine Learning</tag>
       
     </tags>
     
