@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>基于TABLE FILLING的NER&amp;RE</title>
+    <link href="/posts/d92671ff.html"/>
+    <url>/posts/d92671ff.html</url>
+    
+    <content type="html"><![CDATA[<p>在以往的NER&amp;RE的任务中，很多方法都是基于复杂的手工特征和神经网络架构，这导致训练的时间和基于历史的预测时间较长。</p><p>现在呢，有大佬提出了一种新颖而简单的方法：基于<strong>表格表示</strong>从<strong>非结构化文本</strong>中提取命名实体和关系</p><p><code>输入：单词序列w1w2 ... wn（n 是输入中的单词数）</code></p><blockquote><p>Johanson Smith lives in London<br><code>输出：关系三元组（arg0type0，relation，arg1type1）</code><br>（Johanson_B-PER,LiveIn,London_U-LOC）<br>（Smith_B-PER,LiveIn,London_U-LOC）</p></blockquote>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>AESINER模型分析</title>
     <link href="/posts/a8e0d3dd.html"/>
     <url>/posts/a8e0d3dd.html</url>
