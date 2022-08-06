@@ -179,7 +179,7 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/panda.jpg') no-repeat center center;
+         style="background: url('https://user-images.githubusercontent.com/73998546/183028144-86a78bae-b95a-4fbc-a4b7-5d6980bd0c57.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -216,7 +216,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      37
+      38
        分钟
     </span>
   
@@ -273,7 +273,7 @@
 <h3 id="模型框架"><a href="#模型框架" class="headerlink" title="模型框架"></a>模型框架</h3><p><img src="https://user-images.githubusercontent.com/73998546/183022036-0d0fcb88-8e00-4fff-96b4-9049d7d47a26.png" srcset="/img/loading.gif" lazyload alt="模型框架"></p>
 <p>AESINER由6个模块组成。</p>
 <h4 id="1-Embedding-Layer-amp-Encoder"><a href="#1-Embedding-Layer-amp-Encoder" class="headerlink" title="1.Embedding Layer &amp; Encoder"></a>1.Embedding Layer &amp; Encoder</h4><p>以transformer作为上下文编码器，输出单字在句子中的向量表示<br><code>输入：文本</code><br><code>输出：文本中各个字融合了全文语义信息后的向量表示</code></p>
-<h4 id="2-句法信息提取"><a href="#2-句法信息提取" class="headerlink" title="2.句法信息提取"></a>2.句法信息提取</h4><p><img src="https://user-images.githubusercontent.com/73998546/183026914-e2868d7d-f662-4929-a11f-641d1359ed79.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h4 id="2-句法信息提取"><a href="#2-句法信息提取" class="headerlink" title="2.句法信息提取"></a>2.句法信息提取</h4><p><img src="https://user-images.githubusercontent.com/73998546/183026914-e2868d7d-f662-4929-a11f-641d1359ed79.png" srcset="/img/loading.gif" lazyload alt="句法信息提取"></p>
 <p><strong>For POS LABELS</strong>:我们将每个 xi 视为中心字并采用±1字的窗口来提取<br>它的上下文词及其对应的词性标签。<br>例如，在图 (a) 的示例中，对于“Salt”，±1 字窗口覆盖其左侧和右侧的单词，以便生成的上下文特征是“Salt”、“is”和“Lake”，我们使用这些词及其词性标签的组合作为POS 信息（即“Salt NNP”、“is BVZ”和“Lake NNP”）用于 NER 任务。</p>
 <p><strong>For syntactic constituents</strong>：我们从 xi 开始(X 的语法树的叶子)，然后向上搜索树来找到第一个可接受的语法节点2,并选择该节点下的所有标记作为上下文特征，并将它们组合起来用语法节点2获取成分信息。<br>例如，在图 (b) 中，我们从“Salt”开始并提取其第一个接受节点“NP”，然后收集“NP”下的token作为上下文特征（即“Salt”、“Lake”和“City”）并将它们组合起来<br>用“NP”来获取成分信息（即，“Salt NP”, “Lake NP”, and “City NP”)。</p>
 <p><strong>For dependency relations</strong>：对于依赖关系，我们找到所有上下文，通过收集其所有依赖项来为每个 xi 提供特征。<del>然后考虑上下文特征的组合和它们的入站依赖类型作为相应的依赖信息。</del>（不说人话是吧，直接看例子）<br>例如，如图 (c) 所示，对于“Salt”，其上下文特征是“Salt”和“City”，以及它们对应的依赖信息是“Salt compound”和“City root”.</p>
@@ -293,12 +293,29 @@
 <p><code>输入：si‘和hi（融合了全文语义信息后的字向量表示）</code><br><code>输出：Oi（对应于输入xi的门机制输出）</code></p>
 <h4 id="6-Output-layer"><a href="#6-Output-layer" class="headerlink" title="6.Output layer"></a>6.Output layer</h4><p>将oi用一个可训练的矩阵 Wo 用于将其维度对齐到ui = Wo · oi 的输出空间得到yi。之后应用条件随机场 (CRF) 解码器预测标签 y^i ∈ T（其中 T 是具有所有NE标签），再输出序列Y</p>
 <p><code>输入：oi</code><br><code>输出：最终的标签序列Y</code></p>
+<p>参考论文<br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2010.15466.pdf">Improving Named Entity Recognition with<br>Attentive Ensemble of Syntactic Information</a></p>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/NER/">NER</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/NER/">NER</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
+                    
+                  </div>
                 
               </div>
               
@@ -406,7 +423,7 @@
 
   <footer class="text-center mt-5 py-3">
   <div class="footer-content">
-     <div class="copyright">©2021 By 魏攀悦</div> <p id="run_time"></p> <script type="text/javascript" src="js/time.js"></script>
+     <div class="copyright">©2021 By Weipp</div> <p id="run_time"></p> <script type="text/javascript" src="js/time.js"></script>
   </div>
   
   <div class="statistics">
