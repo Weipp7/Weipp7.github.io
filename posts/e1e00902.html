@@ -302,17 +302,41 @@
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>   <br>    alpha = <span class="hljs-number">0.1</span><br>    block_size = <span class="hljs-number">4</span><br>    <span class="hljs-comment"># 1.数据读取</span><br>    samplerate_wm, data_wm = wavfile.read(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>)<br>    samplerate_bg, data_bg = wavfile.read(<span class="hljs-string">&quot;buddy_19s.wav&quot;</span>)<br>    <span class="hljs-comment">#若无法平均分块，也就是说数组大小不是块的大小的整数倍，给数组加一列0，使其变成块大小的整数倍</span><br>    <span class="hljs-keyword">if</span>((np.shape(data_bg)[<span class="hljs-number">0</span>] % block_size) != <span class="hljs-number">0</span>):<br>        data_bg = np.r_[data_bg, np.zeros(<br>            block_size-(np.shape(data_bg)[<span class="hljs-number">0</span>] % block_size))]<br>    <span class="hljs-comment">#将单声道音频转为双声道，方便统一处理</span><br>    <span class="hljs-keyword">if</span>(data_bg.ndim == <span class="hljs-number">1</span>):<br>        a = np.array(np.zeros(data_bg.shape[<span class="hljs-number">0</span>])).T<br>        data_bg = np.c_[np.array([data_bg]).T, a]<br>    <span class="hljs-built_in">print</span>(np.shape(data_wm), np.shape(data_bg))<br><br>    <span class="hljs-comment"># 2.分块&amp;dct</span><br>    dct_embed = DCT_Embed(background=data_bg, watermark=data_wm,<br>                          block_size=block_size, alpha=alpha)<br>    background_dct_blocks = dct_embed.dct_blk(background=data_bg)<br>    <span class="hljs-comment"># print(np.shape(background_dct_blocks))</span><br>    <span class="hljs-comment"># 3.嵌入水印到频域</span><br>    embed_wm_blocks = dct_embed.dct_embed(<br>        dct_data=background_dct_blocks, watermark=data_wm)<br>    <span class="hljs-comment"># 4.idct 从频域变换到时域</span><br>    synthesis = dct_embed.idct_embed(dct_data=embed_wm_blocks)<br>    data = normalizeForWav(synthesis)<br>    wavfile.write(<span class="hljs-string">&quot;piano_dct.wav&quot;</span>, samplerate_bg, data)<br>    draw_time(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>,<span class="hljs-string">&quot;piano_3s&quot;</span>)<br>    draw_time(<span class="hljs-string">&quot;buddy_19s.wav&quot;</span>,<span class="hljs-string">&quot;buddy_19s&quot;</span>)<br>    draw_time(<span class="hljs-string">&quot;piano_dct.wav&quot;</span>,<span class="hljs-string">&quot;piano_dct&quot;</span>)<br><br>    <span class="hljs-comment"># 5.提取水印</span><br>    samplerate_syn, data_syn = wavfile.read(<span class="hljs-string">&quot;bunny_compress.wav&quot;</span>)<br>    <span class="hljs-keyword">if</span>((np.shape(data_syn)[<span class="hljs-number">0</span>] % block_size) != <span class="hljs-number">0</span>):<br>        data_syn = np.r_[data_syn, np.zeros(<br>            block_size-(np.shape(data_syn)[<span class="hljs-number">0</span>] % block_size))]<br>    <span class="hljs-keyword">if</span>(data_syn.ndim == <span class="hljs-number">1</span>):<br>        a = np.array(np.zeros(data_syn.shape[<span class="hljs-number">0</span>])).T<br>        data_syn = np.c_[np.array([data_syn]).T, a]<br>    <span class="hljs-built_in">print</span>(np.shape(data_syn))<br>    extract_watermark = dct_embed.dct_extract(<br>        synthesis=data_syn, watermark_size=data_wm.shape, background=data_bg)<br>    data = normalizeForWav(extract_watermark)<br>    wavfile.write(<span class="hljs-string">&quot;compress_ext.wav&quot;</span>, samplerate_wm, data)<br>    draw_time(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>, <span class="hljs-string">&quot;piano_3s&quot;</span>)<br>    draw_time(<span class="hljs-string">&quot;compress_ext.wav&quot;</span>, <span class="hljs-string">&quot;compress_ext&quot;</span>)<br>    <br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">normalizeForWav</span>(<span class="hljs-params">data</span>):</span><br>    <span class="hljs-keyword">return</span> np.int16(data.real)<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h3 id="结果展示"><a href="#结果展示" class="headerlink" title="结果展示"></a>结果展示</h3><p>是时候展示真正的实力了！</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">&lt;audio id=&quot;audio&quot; controls=&quot;&quot; preload=&quot;none&quot;&gt;<br>      &lt;source id=&quot;mp3&quot; src=&quot;音频地址&quot;&gt;<br>&lt;/audio&gt;<br></code></pre></div></td></tr></table></figure>
-
+<ul>
+<li>原始音频</li>
+</ul>
 <audio id="audio" controls="" preload="none">
-      <source id="mp3" src="https://drive.google.com/file/d/14bRfv45k8WBagXsHSekbCZ8kWPMRRP2U/view?usp=sharing">
+      <source id="mp3" src="/img/audio/buddy_19s.mp3">
 </audio>
 
-<audio controls>
-  <source src="https://suncos-01-1254144885.cos.ap-shanghai.myqcloud.com/%E9%9F%B3%E4%B9%90/Hold%20back%20the%20river.mp3" type="audio/mpeg">
+<ul>
+<li>水印音频</li>
+</ul>
+<audio id="audio" controls="" preload="none">
+      <source id="mp3" src="/img/audio/piano_3s.mp3">
 </audio>
 
-<p><img src="/img/bg/panda.jpg" srcset="/img/loading.gif" lazyload alt="DCT"></p>
+<ul>
+<li>嵌入水印的音频</li>
+</ul>
+<audio id="audio" controls="" preload="none">
+      <source id="mp3" src="/img/audio/piano_dct.mp3">
+</audio>
+
+<ul>
+<li>提取出的水印音频</li>
+</ul>
+<audio id="audio" controls="" preload="none">
+      <source id="mp3" src="/img/audio/piano_ext.mp3">
+</audio>
+  
+
+
+
+
+
+
+
 <h3 id="对音频添加图像水印"><a href="#对音频添加图像水印" class="headerlink" title="对音频添加图像水印"></a>对音频添加图像水印</h3>
             </div>
             <hr>
