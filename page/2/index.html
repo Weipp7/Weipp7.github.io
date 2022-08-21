@@ -18,7 +18,7 @@
   <meta name="author" content="Weipp">
   <meta name="keywords" content="">
   
-  <title>归档 - Weipp&#39;s blog</title>
+  <title>Weipp&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -53,7 +53,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -168,13 +168,17 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="你就是打死我，我也不改这个bug">
+            <span class="h2" id="subtitle" title="谢谢你长得这么好看，还来看我的博客">
               
             </span>
 
             
           </div>
 
+          
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
           
         </div>
       </div>
@@ -185,66 +189,77 @@
     
       <div class="container nopadding-x-md">
         <div class="py-5" id="board"
-          >
+          style=margin-top:0>
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 11 篇文章</p>
-  <hr>
-  
-  
+
+  <div class="row mx-auto index-card">
     
-      
-      <p class="h5">2022</p>
     
-    <a href="/posts/4a79e44f.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">go入门与实战</span>
-      <time style="float: right;">08-20</time>
-    </a>
-  
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/96102aeb.html" target="_self">
+          <img src="/img/blog/cat2.jpg" srcset="/img/loading.gif" lazyload alt="build the drawing bed on github">
+        </a>
+      </div>
     
-    <a href="/posts/e1e00902.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">应用DCT实现对音频水印的添加和提取</span>
-      <time style="float: right;">08-10</time>
-    </a>
-  
-    
-    <a href="/posts/1f6f5090.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">NUS暑校实验记录</span>
-      <time style="float: right;">08-09</time>
-    </a>
-  
-    
-    <a href="/posts/d92671ff.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">基于TABLE FILLING的NER&amp;RE</span>
-      <time style="float: right;">08-06</time>
-    </a>
-  
-    
-    <a href="/posts/a8e0d3dd.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">AESINER模型分析</span>
-      <time style="float: right;">08-05</time>
-    </a>
-  
-    
-    <a href="/posts/e938ff54.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">关系三重提取的新框架</span>
-      <time style="float: right;">08-04</time>
-    </a>
-  
-    
-    <a href="/posts/7a6a6b5a.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">BERT-BiLSTM-CRF</span>
-      <time style="float: right;">08-03</time>
-    </a>
-  
-</div>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/96102aeb.html" target="_self">
+          build the drawing bed on github
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/posts/96102aeb.html" target="_self">
+          
+          
+            
+          
+          问题描述：在写第一篇博客时，图片在md文件中能够正常显示，而在网页上浏览时显示上传失败。查了资料发现原因是md中的文件路径使用相对路径，page到网页上时路径失效，找不到本地存图片的文件，因此加载失败。想解决这个问题，需要将本地图片page到网上生成网链（md可辨别的）。
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-17 13:26" pubdate>
+              2021-06-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/github/">github</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%AE%9E%E7%94%A8%E6%8A%80%E8%83%BD/">实用技能</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
 
 
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
 
 
 
