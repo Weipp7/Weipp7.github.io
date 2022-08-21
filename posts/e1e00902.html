@@ -281,117 +281,21 @@
 <hr>
 <h3 id="关键代码思路"><a href="#关键代码思路" class="headerlink" title="关键代码思路"></a>关键代码思路</h3><ul>
 <li><p>初始化对象</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self, background, watermark, block_size, alpha</span>):</span>
-        b_h, b_w = background.shape[:<span class="hljs-number">2</span>]
-        w_h, w_w = watermark.shape[:<span class="hljs-number">2</span>]
-        <span class="hljs-keyword">assert</span> w_h &lt;= b_h / block_size, \
-            <span class="hljs-string">&quot;\r\n请确保您的的水印音频尺寸 不大于 原有音频尺寸的1/&#123;:&#125;\r\nbackground尺寸&#123;:&#125;\r\nwatermark尺寸&#123;:&#125;&quot;</span>.<span class="hljs-built_in">format</span>(
-                block_size, background.shape, watermark.shape
-            )
-        <span class="hljs-comment"># 块大小保存</span>
-        self.block_size = block_size
-        self.block_size_y = b_w
-        <span class="hljs-comment"># 水印强度控制</span>
-        self.alpha = alpha
-        <span class="hljs-comment"># 随机序列</span>
-        self.k1 = np.random.randn(block_size)</code></pre></div>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self, background, watermark, block_size, alpha</span>):</span><br>        b_h, b_w = background.shape[:<span class="hljs-number">2</span>]<br>        w_h, w_w = watermark.shape[:<span class="hljs-number">2</span>]<br>        <span class="hljs-keyword">assert</span> w_h &lt;= b_h / block_size, \<br>            <span class="hljs-string">&quot;\r\n请确保您的的水印音频尺寸 不大于 原有音频尺寸的1/&#123;:&#125;\r\nbackground尺寸&#123;:&#125;\r\nwatermark尺寸&#123;:&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<br>                block_size, background.shape, watermark.shape<br>            )<br>        <span class="hljs-comment"># 块大小保存</span><br>        self.block_size = block_size<br>        self.block_size_y = b_w<br>        <span class="hljs-comment"># 水印强度控制</span><br>        self.alpha = alpha<br>        <span class="hljs-comment"># 随机序列</span><br>        self.k1 = np.random.randn(block_size)<br></code></pre></div></td></tr></table></figure>
 
 <p>这里有一个强条件：水印音频是原有音频大小的1/n。否则水印块和原有块的映射关系被破坏，水印音频将无法完全插入到原有音频中。</p>
 </li>
 <li><p>分块&amp;DCT变换</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_blk</span>(<span class="hljs-params">self, background</span>):</span>
-        <span class="hljs-string">&#x27;&#x27;&#x27;</span>
-<span class="hljs-string">        对background进行分块，然后进行dct变换，得到dct变换后的矩阵</span>
-<span class="hljs-string">        &#x27;&#x27;&#x27;</span>
-
-        background_dct_blocks_h = background.shape[<span class="hljs-number">0</span>]//self.block_size
-        background_dct_blocks = np.zeros(shape=(
-            (background_dct_blocks_h,
-             self.block_size, background.shape[<span class="hljs-number">1</span>])
-        ))  
-        <span class="hljs-comment"># 前2个维度用来遍历所有block，后2个维度用来存储每个block的DCT变换的值</span>
-        <span class="hljs-comment"># 垂直方向分成background_dct_blocks_h个块</span>
-        h_data = np.vsplit(background, background_dct_blocks_h)
-        <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(background_dct_blocks_h):
-            a_block = h_data[h]
-            <span class="hljs-comment"># dct变换</span>
-            background_dct_blocks[h, ...] = dct(a_block, <span class="hljs-built_in">type</span>=<span class="hljs-number">3</span>, norm=<span class="hljs-string">&quot;ortho&quot;</span>)
-        <span class="hljs-keyword">return</span> background_dct_blocks</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_blk</span>(<span class="hljs-params">self, background</span>):</span><br>        <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">        对background进行分块，然后进行dct变换，得到dct变换后的矩阵</span><br><span class="hljs-string">        &#x27;&#x27;&#x27;</span><br><br>        background_dct_blocks_h = background.shape[<span class="hljs-number">0</span>]//self.block_size<br>        background_dct_blocks = np.zeros(shape=(<br>            (background_dct_blocks_h,<br>             self.block_size, background.shape[<span class="hljs-number">1</span>])<br>        ))  <br>        <span class="hljs-comment"># 前2个维度用来遍历所有block，后2个维度用来存储每个block的DCT变换的值</span><br>        <span class="hljs-comment"># 垂直方向分成background_dct_blocks_h个块</span><br>        h_data = np.vsplit(background, background_dct_blocks_h)<br>        <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(background_dct_blocks_h):<br>            a_block = h_data[h]<br>            <span class="hljs-comment"># dct变换</span><br>            background_dct_blocks[h, ...] = dct(a_block, <span class="hljs-built_in">type</span>=<span class="hljs-number">3</span>, norm=<span class="hljs-string">&quot;ortho&quot;</span>)<br>        <span class="hljs-keyword">return</span> background_dct_blocks<br></code></pre></div></td></tr></table></figure></li>
 <li><p>水印嵌入</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_embed</span>(<span class="hljs-params">self, dct_data, watermark</span>):</span>
-        <span class="hljs-string">&quot;&quot;&quot;_summary_</span>
-<span class="hljs-string">        嵌入水印到original audio的dct系数中</span>
-<span class="hljs-string">        Args:</span>
-<span class="hljs-string">            dct_data (_type_): original audio的dct系数</span>
-<span class="hljs-string">            watermark (_type_): 音频数组</span>
-<span class="hljs-string">        &quot;&quot;&quot;</span>
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------dct_embed start-----------------&quot;</span>)
-        temp = watermark.flatten()
-        result = dct_data.copy()
-        <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(watermark.shape[<span class="hljs-number">0</span>]):
-            <span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(watermark.shape[<span class="hljs-number">1</span>]):   
-                <span class="hljs-comment"># 查询块(h,w)并遍历对应块的最后一列（影响最小的部分），进行修改</span>
-                <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(self.block_size):
-                    result[h, i, self.block_size_y-<span class="hljs-number">1</span>] = dct_data[h,
-                                                                 i, self.block_size_y-<span class="hljs-number">1</span>]+self.alpha*watermark[h][w]
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------dct_embed end-----------------&quot;</span>)
-        <span class="hljs-keyword">return</span> result</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_embed</span>(<span class="hljs-params">self, dct_data, watermark</span>):</span><br>        <span class="hljs-string">&quot;&quot;&quot;_summary_</span><br><span class="hljs-string">        嵌入水印到original audio的dct系数中</span><br><span class="hljs-string">        Args:</span><br><span class="hljs-string">            dct_data (_type_): original audio的dct系数</span><br><span class="hljs-string">            watermark (_type_): 音频数组</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------dct_embed start-----------------&quot;</span>)<br>        temp = watermark.flatten()<br>        result = dct_data.copy()<br>        <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(watermark.shape[<span class="hljs-number">0</span>]):<br>            <span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(watermark.shape[<span class="hljs-number">1</span>]):   <br>                <span class="hljs-comment"># 查询块(h,w)并遍历对应块的最后一列（影响最小的部分），进行修改</span><br>                <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(self.block_size):<br>                    result[h, i, self.block_size_y-<span class="hljs-number">1</span>] = dct_data[h,<br>                                                                 i, self.block_size_y-<span class="hljs-number">1</span>]+self.alpha*watermark[h][w]<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------dct_embed end-----------------&quot;</span>)<br>        <span class="hljs-keyword">return</span> result<br></code></pre></div></td></tr></table></figure></li>
 <li><p>IDCT(DCT逆变换)</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">idct_embed</span>(<span class="hljs-params">self, dct_data</span>):</span>
-        <span class="hljs-string">&#x27;&#x27;&#x27;</span>
-<span class="hljs-string">        进行对dct矩阵进行idct变换，完成从频域到空域的变换</span>
-<span class="hljs-string">        &#x27;&#x27;&#x27;</span>
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------idct_embed start-----------------&quot;</span>)
-        row = <span class="hljs-literal">None</span>
-        result = <span class="hljs-literal">None</span>
-        h = dct_data.shape[<span class="hljs-number">0</span>]
-        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(h):
-            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------Round:&quot;</span>, i, <span class="hljs-string">&quot;-----------------&quot;</span>)
-            block = idct(dct_data[i, ...], <span class="hljs-built_in">type</span>=<span class="hljs-number">3</span>, norm=<span class="hljs-string">&quot;ortho&quot;</span>)
-            result = block <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> np.vstack((result, block))
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------idct_embed end-----------------&quot;</span>)
-        <span class="hljs-keyword">return</span> result</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">idct_embed</span>(<span class="hljs-params">self, dct_data</span>):</span><br>        <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">        进行对dct矩阵进行idct变换，完成从频域到空域的变换</span><br><span class="hljs-string">        &#x27;&#x27;&#x27;</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------idct_embed start-----------------&quot;</span>)<br>        row = <span class="hljs-literal">None</span><br>        result = <span class="hljs-literal">None</span><br>        h = dct_data.shape[<span class="hljs-number">0</span>]<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(h):<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------Round:&quot;</span>, i, <span class="hljs-string">&quot;-----------------&quot;</span>)<br>            block = idct(dct_data[i, ...], <span class="hljs-built_in">type</span>=<span class="hljs-number">3</span>, norm=<span class="hljs-string">&quot;ortho&quot;</span>)<br>            result = block <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> np.vstack((result, block))<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--------idct_embed end-----------------&quot;</span>)<br>        <span class="hljs-keyword">return</span> result<br></code></pre></div></td></tr></table></figure></li>
 <li><p>水印提取</p>
 <p>在每一个块中，遍历对应的加密区域（每个块最后一列），进行加密的逆操作，得到提取出的水印。</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_extract</span>(<span class="hljs-params">self, synthesis, watermark_size, background</span>):</span>
-        <span class="hljs-string">&quot;&quot;&quot;</span>
-<span class="hljs-string">        从嵌入水印的音频中提取水印</span>
-<span class="hljs-string">        :param synthesis: 嵌入水印的空域音频</span>
-<span class="hljs-string">        :param watermark_size: 水印大小</span>
-<span class="hljs-string">        :return: 提取的空域水印</span>
-<span class="hljs-string">        &quot;&quot;&quot;</span>
-        w_h, w_w = watermark_size
-        recover_watermark = np.zeros(shape=watermark_size)
-        synthesis_dct_blocks = self.dct_blk(background=synthesis)
-        background_dct_blocks = self.dct_blk(background=background)
-        p = np.zeros(self.block_size)
-        <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(w_h):
-            <span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(w_w):
-                <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(self.block_size):
-                    recover_watermark[h, w] = (
-                        synthesis_dct_blocks[h, k, self.block_size_y-<span class="hljs-number">1</span>] - background_dct_blocks[h, k, self.block_size_y-<span class="hljs-number">1</span>])/self.alpha
-        <span class="hljs-keyword">return</span> recover_watermark</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_extract</span>(<span class="hljs-params">self, synthesis, watermark_size, background</span>):</span><br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        从嵌入水印的音频中提取水印</span><br><span class="hljs-string">        :param synthesis: 嵌入水印的空域音频</span><br><span class="hljs-string">        :param watermark_size: 水印大小</span><br><span class="hljs-string">        :return: 提取的空域水印</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        w_h, w_w = watermark_size<br>        recover_watermark = np.zeros(shape=watermark_size)<br>        synthesis_dct_blocks = self.dct_blk(background=synthesis)<br>        background_dct_blocks = self.dct_blk(background=background)<br>        p = np.zeros(self.block_size)<br>        <span class="hljs-keyword">for</span> h <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(w_h):<br>            <span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(w_w):<br>                <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(self.block_size):<br>                    recover_watermark[h, w] = (<br>                        synthesis_dct_blocks[h, k, self.block_size_y-<span class="hljs-number">1</span>] - background_dct_blocks[h, k, self.block_size_y-<span class="hljs-number">1</span>])/self.alpha<br>        <span class="hljs-keyword">return</span> recover_watermark<br></code></pre></div></td></tr></table></figure></li>
 <li><p>绘制频谱图像</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">draw_time</span>(<span class="hljs-params">path, filename</span>):</span>
-    f = wave.<span class="hljs-built_in">open</span>(path, <span class="hljs-string">&#x27;rb&#x27;</span>)
-    params = f.getparams()
-    params = f.getparams()
-    <span class="hljs-comment"># 通道数、采样字节数、采样率、采样帧数</span>
-    nchannels, sampwidth, framerate, nframes = params[:<span class="hljs-number">4</span>]
-    voiceStrData = f.readframes(nframes)
-    waveData = np.fromstring(voiceStrData, dtype=np.short)  <span class="hljs-comment"># 将原始字符数据转换为整数</span>
-    <span class="hljs-comment"># 音频数据归一化</span>
-    waveData = waveData * <span class="hljs-number">1.0</span>/<span class="hljs-built_in">max</span>(<span class="hljs-built_in">abs</span>(waveData))
-    <span class="hljs-comment"># 将音频信号规整乘每行一路通道信号的格式，即该矩阵一行为一个通道的采样点，共nchannels行</span>
-    waveData = np.reshape(waveData, [nframes, nchannels]).T  <span class="hljs-comment"># .T 表示转置</span>
-    f.close()
-
-    time = np.arange(<span class="hljs-number">0</span>, nframes)*(<span class="hljs-number">1.0</span>/framerate)
-    plt.plot(time, waveData[<span class="hljs-number">0</span>, :], c=<span class="hljs-string">&#x27;b&#x27;</span>)
-    plt.xlabel(<span class="hljs-string">&#x27;time&#x27;</span>)
-    plt.ylabel(<span class="hljs-string">&#x27;am&#x27;</span>)
-    plt.savefig(<span class="hljs-string">&#x27;./%s.jpg&#x27;</span> % filename)
-    plt.show()</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">draw_time</span>(<span class="hljs-params">path, filename</span>):</span><br>    f = wave.<span class="hljs-built_in">open</span>(path, <span class="hljs-string">&#x27;rb&#x27;</span>)<br>    params = f.getparams()<br>    params = f.getparams()<br>    <span class="hljs-comment"># 通道数、采样字节数、采样率、采样帧数</span><br>    nchannels, sampwidth, framerate, nframes = params[:<span class="hljs-number">4</span>]<br>    voiceStrData = f.readframes(nframes)<br>    waveData = np.fromstring(voiceStrData, dtype=np.short)  <span class="hljs-comment"># 将原始字符数据转换为整数</span><br>    <span class="hljs-comment"># 音频数据归一化</span><br>    waveData = waveData * <span class="hljs-number">1.0</span>/<span class="hljs-built_in">max</span>(<span class="hljs-built_in">abs</span>(waveData))<br>    <span class="hljs-comment"># 将音频信号规整乘每行一路通道信号的格式，即该矩阵一行为一个通道的采样点，共nchannels行</span><br>    waveData = np.reshape(waveData, [nframes, nchannels]).T  <span class="hljs-comment"># .T 表示转置</span><br>    f.close()<br><br>    time = np.arange(<span class="hljs-number">0</span>, nframes)*(<span class="hljs-number">1.0</span>/framerate)<br>    plt.plot(time, waveData[<span class="hljs-number">0</span>, :], c=<span class="hljs-string">&#x27;b&#x27;</span>)<br>    plt.xlabel(<span class="hljs-string">&#x27;time&#x27;</span>)<br>    plt.ylabel(<span class="hljs-string">&#x27;am&#x27;</span>)<br>    plt.savefig(<span class="hljs-string">&#x27;./%s.jpg&#x27;</span> % filename)<br>    plt.show()<br></code></pre></div></td></tr></table></figure></li>
 <li><p>主函数</p>
 <p>两个if：</p>
 <p><code>if((np.shape(data_bg)[0] % block_size) != 0)</code></p>
@@ -400,57 +304,7 @@
 <p>声道有单声道和立体声之分，单声道振幅数据为n*1矩阵点，立体声为n*2矩阵点</p>
 <p>在单声道和双声道的处理上有所不同，要加特判</p>
 <p>当音频为单声道时，相当于右耳或左耳其中一个通道是静音的，因此这里做的处理是将<code>n*1矩阵点</code>-&gt;<code>n*2矩阵点</code>,即在数组后面加一列0（我的理解）。还有一种处理是将左右耳的通道变为一样的，即在数组后面加一列原数组。（这是另一种想法，我只尝试了前者）</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:
-   
-    alpha = <span class="hljs-number">0.1</span>
-    block_size = <span class="hljs-number">4</span>
-    <span class="hljs-comment"># 1.数据读取</span>
-    samplerate_wm, data_wm = wavfile.read(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>)
-    samplerate_bg, data_bg = wavfile.read(<span class="hljs-string">&quot;buddy_19s.wav&quot;</span>)
-    <span class="hljs-comment">#若无法平均分块，也就是说数组大小不是块的大小的整数倍，给数组加一列0，使其变成块大小的整数倍</span>
-    <span class="hljs-keyword">if</span>((np.shape(data_bg)[<span class="hljs-number">0</span>] % block_size) != <span class="hljs-number">0</span>):
-        data_bg = np.r_[data_bg, np.zeros(
-            block_size-(np.shape(data_bg)[<span class="hljs-number">0</span>] % block_size))]
-    <span class="hljs-comment">#将单声道音频转为双声道，方便统一处理</span>
-    <span class="hljs-keyword">if</span>(data_bg.ndim == <span class="hljs-number">1</span>):
-        a = np.array(np.zeros(data_bg.shape[<span class="hljs-number">0</span>])).T
-        data_bg = np.c_[np.array([data_bg]).T, a]
-    <span class="hljs-built_in">print</span>(np.shape(data_wm), np.shape(data_bg))
-
-    <span class="hljs-comment"># 2.分块&amp;dct</span>
-    dct_embed = DCT_Embed(background=data_bg, watermark=data_wm,
-                          block_size=block_size, alpha=alpha)
-    background_dct_blocks = dct_embed.dct_blk(background=data_bg)
-    <span class="hljs-comment"># print(np.shape(background_dct_blocks))</span>
-    <span class="hljs-comment"># 3.嵌入水印到频域</span>
-    embed_wm_blocks = dct_embed.dct_embed(
-        dct_data=background_dct_blocks, watermark=data_wm)
-    <span class="hljs-comment"># 4.idct 从频域变换到时域</span>
-    synthesis = dct_embed.idct_embed(dct_data=embed_wm_blocks)
-    data = normalizeForWav(synthesis)
-    wavfile.write(<span class="hljs-string">&quot;piano_dct.wav&quot;</span>, samplerate_bg, data)
-    draw_time(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>,<span class="hljs-string">&quot;piano_3s&quot;</span>)
-    draw_time(<span class="hljs-string">&quot;buddy_19s.wav&quot;</span>,<span class="hljs-string">&quot;buddy_19s&quot;</span>)
-    draw_time(<span class="hljs-string">&quot;piano_dct.wav&quot;</span>,<span class="hljs-string">&quot;piano_dct&quot;</span>)
-
-    <span class="hljs-comment"># 5.提取水印</span>
-    samplerate_syn, data_syn = wavfile.read(<span class="hljs-string">&quot;bunny_compress.wav&quot;</span>)
-    <span class="hljs-keyword">if</span>((np.shape(data_syn)[<span class="hljs-number">0</span>] % block_size) != <span class="hljs-number">0</span>):
-        data_syn = np.r_[data_syn, np.zeros(
-            block_size-(np.shape(data_syn)[<span class="hljs-number">0</span>] % block_size))]
-    <span class="hljs-keyword">if</span>(data_syn.ndim == <span class="hljs-number">1</span>):
-        a = np.array(np.zeros(data_syn.shape[<span class="hljs-number">0</span>])).T
-        data_syn = np.c_[np.array([data_syn]).T, a]
-    <span class="hljs-built_in">print</span>(np.shape(data_syn))
-    extract_watermark = dct_embed.dct_extract(
-        synthesis=data_syn, watermark_size=data_wm.shape, background=data_bg)
-    data = normalizeForWav(extract_watermark)
-    wavfile.write(<span class="hljs-string">&quot;compress_ext.wav&quot;</span>, samplerate_wm, data)
-    draw_time(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>, <span class="hljs-string">&quot;piano_3s&quot;</span>)
-    draw_time(<span class="hljs-string">&quot;compress_ext.wav&quot;</span>, <span class="hljs-string">&quot;compress_ext&quot;</span>)
-    
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">normalizeForWav</span>(<span class="hljs-params">data</span>):</span>
-    <span class="hljs-keyword">return</span> np.int16(data.real)</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>   <br>    alpha = <span class="hljs-number">0.1</span><br>    block_size = <span class="hljs-number">4</span><br>    <span class="hljs-comment"># 1.数据读取</span><br>    samplerate_wm, data_wm = wavfile.read(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>)<br>    samplerate_bg, data_bg = wavfile.read(<span class="hljs-string">&quot;buddy_19s.wav&quot;</span>)<br>    <span class="hljs-comment">#若无法平均分块，也就是说数组大小不是块的大小的整数倍，给数组加一列0，使其变成块大小的整数倍</span><br>    <span class="hljs-keyword">if</span>((np.shape(data_bg)[<span class="hljs-number">0</span>] % block_size) != <span class="hljs-number">0</span>):<br>        data_bg = np.r_[data_bg, np.zeros(<br>            block_size-(np.shape(data_bg)[<span class="hljs-number">0</span>] % block_size))]<br>    <span class="hljs-comment">#将单声道音频转为双声道，方便统一处理</span><br>    <span class="hljs-keyword">if</span>(data_bg.ndim == <span class="hljs-number">1</span>):<br>        a = np.array(np.zeros(data_bg.shape[<span class="hljs-number">0</span>])).T<br>        data_bg = np.c_[np.array([data_bg]).T, a]<br>    <span class="hljs-built_in">print</span>(np.shape(data_wm), np.shape(data_bg))<br><br>    <span class="hljs-comment"># 2.分块&amp;dct</span><br>    dct_embed = DCT_Embed(background=data_bg, watermark=data_wm,<br>                          block_size=block_size, alpha=alpha)<br>    background_dct_blocks = dct_embed.dct_blk(background=data_bg)<br>    <span class="hljs-comment"># print(np.shape(background_dct_blocks))</span><br>    <span class="hljs-comment"># 3.嵌入水印到频域</span><br>    embed_wm_blocks = dct_embed.dct_embed(<br>        dct_data=background_dct_blocks, watermark=data_wm)<br>    <span class="hljs-comment"># 4.idct 从频域变换到时域</span><br>    synthesis = dct_embed.idct_embed(dct_data=embed_wm_blocks)<br>    data = normalizeForWav(synthesis)<br>    wavfile.write(<span class="hljs-string">&quot;piano_dct.wav&quot;</span>, samplerate_bg, data)<br>    draw_time(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>,<span class="hljs-string">&quot;piano_3s&quot;</span>)<br>    draw_time(<span class="hljs-string">&quot;buddy_19s.wav&quot;</span>,<span class="hljs-string">&quot;buddy_19s&quot;</span>)<br>    draw_time(<span class="hljs-string">&quot;piano_dct.wav&quot;</span>,<span class="hljs-string">&quot;piano_dct&quot;</span>)<br><br>    <span class="hljs-comment"># 5.提取水印</span><br>    samplerate_syn, data_syn = wavfile.read(<span class="hljs-string">&quot;bunny_compress.wav&quot;</span>)<br>    <span class="hljs-keyword">if</span>((np.shape(data_syn)[<span class="hljs-number">0</span>] % block_size) != <span class="hljs-number">0</span>):<br>        data_syn = np.r_[data_syn, np.zeros(<br>            block_size-(np.shape(data_syn)[<span class="hljs-number">0</span>] % block_size))]<br>    <span class="hljs-keyword">if</span>(data_syn.ndim == <span class="hljs-number">1</span>):<br>        a = np.array(np.zeros(data_syn.shape[<span class="hljs-number">0</span>])).T<br>        data_syn = np.c_[np.array([data_syn]).T, a]<br>    <span class="hljs-built_in">print</span>(np.shape(data_syn))<br>    extract_watermark = dct_embed.dct_extract(<br>        synthesis=data_syn, watermark_size=data_wm.shape, background=data_bg)<br>    data = normalizeForWav(extract_watermark)<br>    wavfile.write(<span class="hljs-string">&quot;compress_ext.wav&quot;</span>, samplerate_wm, data)<br>    draw_time(<span class="hljs-string">&quot;piano_3s.wav&quot;</span>, <span class="hljs-string">&quot;piano_3s&quot;</span>)<br>    draw_time(<span class="hljs-string">&quot;compress_ext.wav&quot;</span>, <span class="hljs-string">&quot;compress_ext&quot;</span>)<br>    <br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">normalizeForWav</span>(<span class="hljs-params">data</span>):</span><br>    <span class="hljs-keyword">return</span> np.int16(data.real)<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h3 id="结果展示"><a href="#结果展示" class="headerlink" title="结果展示"></a>结果展示</h3><p>是时候展示真正的实力了！</p>
 <ul>
@@ -489,128 +343,13 @@
 <h3 id="对音频添加图像水印"><a href="#对音频添加图像水印" class="headerlink" title="对音频添加图像水印"></a>对音频添加图像水印</h3><p>跟前面的DCT算法思想类似，不同的就是将图片作为水印插入到音频中。与音频水印转换为的数组（m*2）不同，图片水印转换为的数组更大（m*n）。图片的像素点可以进行二值归一化，1表示黑色像素，0表示白色像素。</p>
 <ul>
 <li><p>分块&amp;DCT变换&amp;水印嵌入</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_embed</span>(<span class="hljs-params">audio0,leng,img</span>):</span>
-    numFrames = math.ceil(audio0.shape[<span class="hljs-number">0</span>] / leng)
-    frames = <span class="hljs-built_in">list</span>()
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(numFrames):
-        frames.append(audio0[i * leng: (i * leng) + leng])
-    ary_frames=np.asarray(frames)
-    DCTCoeffs = np.copy(ary_frames)
-
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(ary_frames.shape[<span class="hljs-number">0</span>]):
-        DCTCoeffs[i] = DCT(ary_frames[i])
-
-    width, height = img.size
-
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(DCTCoeffs)):
-        <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span>:
-            audio = DCTCoeffs[i]
-        <span class="hljs-keyword">else</span>:
-            audio = np.concatenate((audio, DCTCoeffs[i]), axis=<span class="hljs-number">0</span>)
-    embedded = audio.copy()
-    <span class="hljs-comment"># Embedding width and heigth</span>
-    embedded[<span class="hljs-number">0</span>][-<span class="hljs-number">1</span>] = width
-    embedded[<span class="hljs-number">1</span>][-<span class="hljs-number">1</span>] = height
-    <span class="hljs-comment"># Embedding watermark</span>
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(width):
-        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(height):
-            value = img.getpixel(xy=(i, j))
-            value = <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> value == <span class="hljs-number">255</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
-            x = i * height + j
-            embedded[x + <span class="hljs-number">32</span>][<span class="hljs-number">0</span>] = setLastBit(embedded[x + <span class="hljs-number">32</span>][<span class="hljs-number">0</span>], value)
-            
-    <span class="hljs-keyword">return</span> embedded</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_embed</span>(<span class="hljs-params">audio0,leng,img</span>):</span><br>    numFrames = math.ceil(audio0.shape[<span class="hljs-number">0</span>] / leng)<br>    frames = <span class="hljs-built_in">list</span>()<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(numFrames):<br>        frames.append(audio0[i * leng: (i * leng) + leng])<br>    ary_frames=np.asarray(frames)<br>    DCTCoeffs = np.copy(ary_frames)<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(ary_frames.shape[<span class="hljs-number">0</span>]):<br>        DCTCoeffs[i] = DCT(ary_frames[i])<br><br>    width, height = img.size<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(DCTCoeffs)):<br>        <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span>:<br>            audio = DCTCoeffs[i]<br>        <span class="hljs-keyword">else</span>:<br>            audio = np.concatenate((audio, DCTCoeffs[i]), axis=<span class="hljs-number">0</span>)<br>    embedded = audio.copy()<br>    <span class="hljs-comment"># Embedding width and heigth</span><br>    embedded[<span class="hljs-number">0</span>][-<span class="hljs-number">1</span>] = width<br>    embedded[<span class="hljs-number">1</span>][-<span class="hljs-number">1</span>] = height<br>    <span class="hljs-comment"># Embedding watermark</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(width):<br>        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(height):<br>            value = img.getpixel(xy=(i, j))<br>            value = <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> value == <span class="hljs-number">255</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span><br>            x = i * height + j<br>            embedded[x + <span class="hljs-number">32</span>][<span class="hljs-number">0</span>] = setLastBit(embedded[x + <span class="hljs-number">32</span>][<span class="hljs-number">0</span>], value)<br>            <br>    <span class="hljs-keyword">return</span> embedded<br></code></pre></div></td></tr></table></figure></li>
 <li><p>IDCT变换</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">idct_embed</span>(<span class="hljs-params">audio,leng</span>):</span>
-    numFrames = math.ceil(audio.shape[<span class="hljs-number">0</span>] / leng)
-    frames = <span class="hljs-built_in">list</span>()
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(numFrames):
-        frames.append(audio[i * leng: (i * leng) + leng])
-    ary_frames = np.asarray(frames)
-    iDCTCoeffs = np.copy(ary_frames)
-
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(ary_frames.shape[<span class="hljs-number">0</span>]):
-        iDCTCoeffs[i] = iDCT(ary_frames[i])
-
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(iDCTCoeffs)):
-        <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span>:
-            synthesis = iDCTCoeffs[i]
-        <span class="hljs-keyword">else</span>:
-            synthesis = np.concatenate((synthesis, iDCTCoeffs[i]), axis=<span class="hljs-number">0</span>)
-    <span class="hljs-keyword">return</span> synthesis</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">idct_embed</span>(<span class="hljs-params">audio,leng</span>):</span><br>    numFrames = math.ceil(audio.shape[<span class="hljs-number">0</span>] / leng)<br>    frames = <span class="hljs-built_in">list</span>()<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(numFrames):<br>        frames.append(audio[i * leng: (i * leng) + leng])<br>    ary_frames = np.asarray(frames)<br>    iDCTCoeffs = np.copy(ary_frames)<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(ary_frames.shape[<span class="hljs-number">0</span>]):<br>        iDCTCoeffs[i] = iDCT(ary_frames[i])<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(iDCTCoeffs)):<br>        <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span>:<br>            synthesis = iDCTCoeffs[i]<br>        <span class="hljs-keyword">else</span>:<br>            synthesis = np.concatenate((synthesis, iDCTCoeffs[i]), axis=<span class="hljs-number">0</span>)<br>    <span class="hljs-keyword">return</span> synthesis<br></code></pre></div></td></tr></table></figure></li>
 <li><p>水印提取</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_extract</span>(<span class="hljs-params">audio,leng</span>):</span>
-    numFrames = math.ceil(audio.shape[<span class="hljs-number">0</span>] / leng)
-    frames = <span class="hljs-built_in">list</span>()
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(numFrames):
-        frames.append(audio[i * leng: (i * leng) + leng])
-    ary_frames = np.asarray(frames)
-    DCTCoeffs = np.copy(ary_frames)
-
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(ary_frames.shape[<span class="hljs-number">0</span>]):
-        DCTCoeffs[i] = DCT(ary_frames[i])
-
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(DCTCoeffs)):
-        <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span>:
-            audio = DCTCoeffs[i]
-        <span class="hljs-keyword">else</span>:
-            audio = np.concatenate((audio, DCTCoeffs[i]), axis=<span class="hljs-number">0</span>)
-
-    width, heigth = (<span class="hljs-number">112</span>, <span class="hljs-number">112</span>)  <span class="hljs-comment"># sizeExtraction(joinAudio)</span>
-    image = Image.new(<span class="hljs-string">&quot;1&quot;</span>, (width, heigth))
-    <span class="hljs-comment"># Embedding watermark</span>
-    <span class="hljs-comment"># Extraction watermark</span>
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(width):
-        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(heigth):
-            x = i * heigth + j
-            value = getLastBit(audio[x + <span class="hljs-number">32</span>][<span class="hljs-number">0</span>])
-            image.putpixel(xy=(i, j), value=value)
-
-    <span class="hljs-keyword">return</span> image</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dct_extract</span>(<span class="hljs-params">audio,leng</span>):</span><br>    numFrames = math.ceil(audio.shape[<span class="hljs-number">0</span>] / leng)<br>    frames = <span class="hljs-built_in">list</span>()<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(numFrames):<br>        frames.append(audio[i * leng: (i * leng) + leng])<br>    ary_frames = np.asarray(frames)<br>    DCTCoeffs = np.copy(ary_frames)<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(ary_frames.shape[<span class="hljs-number">0</span>]):<br>        DCTCoeffs[i] = DCT(ary_frames[i])<br><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(DCTCoeffs)):<br>        <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span>:<br>            audio = DCTCoeffs[i]<br>        <span class="hljs-keyword">else</span>:<br>            audio = np.concatenate((audio, DCTCoeffs[i]), axis=<span class="hljs-number">0</span>)<br><br>    width, heigth = (<span class="hljs-number">112</span>, <span class="hljs-number">112</span>)  <span class="hljs-comment"># sizeExtraction(joinAudio)</span><br>    image = Image.new(<span class="hljs-string">&quot;1&quot;</span>, (width, heigth))<br>    <span class="hljs-comment"># Embedding watermark</span><br>    <span class="hljs-comment"># Extraction watermark</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(width):<br>        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(heigth):<br>            x = i * heigth + j<br>            value = getLastBit(audio[x + <span class="hljs-number">32</span>][<span class="hljs-number">0</span>])<br>            image.putpixel(xy=(i, j), value=value)<br><br>    <span class="hljs-keyword">return</span> image<br></code></pre></div></td></tr></table></figure></li>
 <li><p>主函数</p>
-<div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:
-    root = <span class="hljs-string">&quot;..&quot;</span>
-
-    <span class="hljs-comment"># 0. 超参数设置</span>
-
-    length_frame = <span class="hljs-number">4</span> <span class="hljs-comment"># 每段长度</span>
-
-    <span class="hljs-comment"># 1. 数据读取</span>
-
-    <span class="hljs-comment"># watermak</span>
-    img = Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;lock.png&quot;</span>)
-    img = img.convert(mode=<span class="hljs-string">&quot;1&quot;</span>,dither=<span class="hljs-number">0</span>)
-    samplerate, data = wavfile.read(<span class="hljs-string">&quot;test.wav&quot;</span>)
-    <span class="hljs-comment"># print(data)</span>
-    <span class="hljs-comment"># print((np.asarray(data)).shape)</span>
-
-    <span class="hljs-comment"># 2. 嵌入水印图像</span>
-    embed_watermak_audio = dct_embed(audio0=data,leng=length_frame,img=img)  <span class="hljs-comment"># 在dct块中嵌入水印图像</span>
-
-    <span class="hljs-comment"># 3. 将图像转换为空域形式</span>
-    synthesis = idct_embed(audio=embed_watermak_audio,leng=length_frame)  <span class="hljs-comment"># idct变换得到空域图像</span>
-    <span class="hljs-comment"># print(synthesis)</span>
-    <span class="hljs-comment"># print((np.asarray(synthesis)).shape)</span>
-    wavfile.write(<span class="hljs-string">&quot;Output.wav&quot;</span>, samplerate, synthesis)
-    <span class="hljs-comment"># 4. 提取水印</span>
-    extract_watermark = dct_extract(audio=synthesis, leng=length_frame)
-    extract_watermark = extract_watermark.convert(<span class="hljs-string">&#x27;RGBA&#x27;</span>)
-    <span class="hljs-comment"># extract_watermark.show()</span>
-
-    images = [img, extract_watermark]
-    titles = [<span class="hljs-string">&quot;Watermark&quot;</span>, <span class="hljs-string">&quot;Extract_Watermark&quot;</span>]
-    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">2</span>):
-        plt.subplot(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, i + <span class="hljs-number">1</span>)
-        <span class="hljs-keyword">if</span> i % <span class="hljs-number">2</span>:
-            plt.imshow(images[i], cmap=plt.cm.gray)
-        <span class="hljs-keyword">else</span>:
-            plt.imshow(images[i])
-        plt.title(titles[i])
-        plt.axis(<span class="hljs-string">&quot;off&quot;</span>)
-    plt.show()
-
-    show_wav(<span class="hljs-string">&quot;test.wav&quot;</span>)
-    show_wav(<span class="hljs-string">&quot;Output.wav&quot;</span>)</code></pre></div></li>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    root = <span class="hljs-string">&quot;..&quot;</span><br><br>    <span class="hljs-comment"># 0. 超参数设置</span><br><br>    length_frame = <span class="hljs-number">4</span> <span class="hljs-comment"># 每段长度</span><br><br>    <span class="hljs-comment"># 1. 数据读取</span><br><br>    <span class="hljs-comment"># watermak</span><br>    img = Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;lock.png&quot;</span>)<br>    img = img.convert(mode=<span class="hljs-string">&quot;1&quot;</span>,dither=<span class="hljs-number">0</span>)<br>    samplerate, data = wavfile.read(<span class="hljs-string">&quot;test.wav&quot;</span>)<br>    <span class="hljs-comment"># print(data)</span><br>    <span class="hljs-comment"># print((np.asarray(data)).shape)</span><br><br>    <span class="hljs-comment"># 2. 嵌入水印图像</span><br>    embed_watermak_audio = dct_embed(audio0=data,leng=length_frame,img=img)  <span class="hljs-comment"># 在dct块中嵌入水印图像</span><br><br>    <span class="hljs-comment"># 3. 将图像转换为空域形式</span><br>    synthesis = idct_embed(audio=embed_watermak_audio,leng=length_frame)  <span class="hljs-comment"># idct变换得到空域图像</span><br>    <span class="hljs-comment"># print(synthesis)</span><br>    <span class="hljs-comment"># print((np.asarray(synthesis)).shape)</span><br>    wavfile.write(<span class="hljs-string">&quot;Output.wav&quot;</span>, samplerate, synthesis)<br>    <span class="hljs-comment"># 4. 提取水印</span><br>    extract_watermark = dct_extract(audio=synthesis, leng=length_frame)<br>    extract_watermark = extract_watermark.convert(<span class="hljs-string">&#x27;RGBA&#x27;</span>)<br>    <span class="hljs-comment"># extract_watermark.show()</span><br><br>    images = [img, extract_watermark]<br>    titles = [<span class="hljs-string">&quot;Watermark&quot;</span>, <span class="hljs-string">&quot;Extract_Watermark&quot;</span>]<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">2</span>):<br>        plt.subplot(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, i + <span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">if</span> i % <span class="hljs-number">2</span>:<br>            plt.imshow(images[i], cmap=plt.cm.gray)<br>        <span class="hljs-keyword">else</span>:<br>            plt.imshow(images[i])<br>        plt.title(titles[i])<br>        plt.axis(<span class="hljs-string">&quot;off&quot;</span>)<br>    plt.show()<br><br>    show_wav(<span class="hljs-string">&quot;test.wav&quot;</span>)<br>    show_wav(<span class="hljs-string">&quot;Output.wav&quot;</span>)<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h3 id="结果展示-1"><a href="#结果展示-1" class="headerlink" title="结果展示"></a>结果展示</h3><ul>
 <li>原始音频</li>
@@ -636,9 +375,8 @@
 <p>就这样吧</p>
 <p>具体代码实现在这里</p>
 <a class="btn" href="https://github.com/Weipp7/NUS-Project-Audio-Watermarking"  target="_blank">DCT-AUDIO</a>
-
 <a class="btn" href="https://github.com/Eipi15926/Audio-Steganography-and-Watermark/tree/DCT-Image"  target="_blank">DCT-IMAGE</a>
-
+<p><a target="_blank" rel="noopener" href="https://github.com/Weipp7/NUS-Project-Audio-Watermarking"> </a></p>
 
             </div>
             <hr>
