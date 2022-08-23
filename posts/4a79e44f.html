@@ -206,7 +206,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.6k 字
+      6.3k 字
     </span>
   
 
@@ -216,7 +216,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      76
+      84
        分钟
     </span>
   
@@ -585,9 +585,59 @@
 
 
 
+<h5 id="e-函数类型"><a href="#e-函数类型" class="headerlink" title="(e) 函数类型"></a>(e) 函数类型</h5><p>函数是基本的代码块，负责执行不同的功能。</p>
+<p>Go 语言至少需要有个 main() 函数。</p>
+<p>函数声明告诉了编译器函数的名称，返回类型，和参数</p>
+<p>函数定义</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">function_name</span><span class="hljs-params">( [parameter list] )</span> [<span class="hljs-title">return_types</span>]</span> &#123;<br>   函数体<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>func：函数由 func 开始声明</li>
+<li>function_name：函数名称，参数列表和返回值类型构成了函数签名。</li>
+<li>parameter list：参数列表</li>
+<li>return_types：返回类型，函数返回一列值。</li>
+<li>函数体：函数定义的代码集合。</li>
+</ul>
+<p>函数调用实例</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>   <span class="hljs-comment">/* 定义局部变量 */</span><br>   <span class="hljs-keyword">var</span> a <span class="hljs-keyword">int</span> = <span class="hljs-number">100</span><br>   <span class="hljs-keyword">var</span> b <span class="hljs-keyword">int</span> = <span class="hljs-number">200</span><br>   <span class="hljs-keyword">var</span> ret <span class="hljs-keyword">int</span><br><br>   <span class="hljs-comment">/* 调用函数并返回最大值 */</span><br>   ret = max(a, b)<br><br>   fmt.Printf( <span class="hljs-string">&quot;最大值是 : %d\n&quot;</span>, ret )<br>&#125;<br><br><span class="hljs-comment">/* 函数返回两个数的最大值 */</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">max</span><span class="hljs-params">(num1, num2 <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>   <span class="hljs-comment">/* 定义局部变量 */</span><br>   <span class="hljs-keyword">var</span> result <span class="hljs-keyword">int</span><br><br>   <span class="hljs-keyword">if</span> (num1 &gt; num2) &#123;<br>      result = num1<br>   &#125; <span class="hljs-keyword">else</span> &#123;<br>      result = num2<br>   &#125;<br>   <span class="hljs-keyword">return</span> result<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight ada"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ada">最大值是 : 200<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>值传递&amp;引用传递</strong></p>
+<p>值传递：值传递是指在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。</p>
+<p>引用传递：引用传递是指在调用函数时将实际参数的地址传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。</p>
+<h5 id="f-结构化类型-struct"><a href="#f-结构化类型-struct" class="headerlink" title="(f) 结构化类型(struct)"></a>(f) 结构化类型(struct)</h5><p>在结构体中我们可以为不同项定义不同的数据类型。</p>
+<p><strong>定义结构体</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">type</span> struct_variable_type <span class="hljs-keyword">struct</span> &#123;<br>   member1 definition1<br>   member2 definition2<br>   ...<br>   memberX definitionX<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>结构体变量声明</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go">variable_name := structure_variable_type &#123;value1, value2...valuen&#125;<br><span class="hljs-comment">//或</span><br>variable_name := structure_variable_type &#123; key1: value1, key2: value2..., keyn: valuen&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>看个例子</p>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-keyword">type</span> Blogs <span class="hljs-keyword">struct</span> &#123;<br>	title  <span class="hljs-keyword">string</span><br>	author <span class="hljs-keyword">string</span><br>	date   <span class="hljs-keyword">string</span><br>	id     <span class="hljs-keyword">int</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">// 创建一个新的结构体</span><br>	fmt.Println(Blogs&#123;<span class="hljs-string">&quot;Go入门与实战&quot;</span>, <span class="hljs-string">&quot;weipp&quot;</span>, <span class="hljs-string">&quot;23/8/2022&quot;</span>, <span class="hljs-number">429761</span>&#125;)<br>	<span class="hljs-comment">// 也可以使用 key =&gt; value 格式</span><br>	fmt.Println(Blogs&#123;title: <span class="hljs-string">&quot;Go入门与实战&quot;</span>, author: <span class="hljs-string">&quot;weipp&quot;</span>, date: <span class="hljs-string">&quot;23/8/2022&quot;</span>, id: <span class="hljs-number">429761</span>&#125;)<br>	<span class="hljs-comment">//忽略的字段为0或空</span><br>	fmt.Println(Blogs&#123;title: <span class="hljs-string">&quot;Go入门与实战&quot;</span>, author: <span class="hljs-string">&quot;weipp&quot;</span>&#125;)<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">&#123;Go入门与实战 weipp <span class="hljs-number">23</span><span class="hljs-regexp">/8/</span><span class="hljs-number">2022</span> <span class="hljs-number">429761</span>&#125;<br>&#123;Go入门与实战 weipp <span class="hljs-number">23</span><span class="hljs-regexp">/8/</span><span class="hljs-number">2022</span> <span class="hljs-number">429761</span>&#125;<br>&#123;Go入门与实战 weipp  <span class="hljs-number">0</span>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>访问结构体成员</strong></p>
+<ul>
+<li>结构体.成员名</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">var</span> blog1 Blogs<br>blog1.title = <span class="hljs-string">&quot;Go入门与实战&quot;</span><br>blog1.author = <span class="hljs-string">&quot;weipp&quot;</span><br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>结构体指针.成员名</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs go"><span class="hljs-keyword">var</span> blog2_ptr *Blogs<br><span class="hljs-comment">//等价于</span><br><span class="hljs-keyword">var</span> blog2 Blogs<br>blog2_ptr := &amp;blog2<br><br>blog2_ptr.title = <span class="hljs-string">&quot;Go入门与实战&quot;</span><br>blog2_ptr.author = <span class="hljs-string">&quot;weipp&quot;</span><br></code></pre></div></td></tr></table></figure>
 
 
-<h5 id="e-函数类型"><a href="#e-函数类型" class="headerlink" title="(e) 函数类型"></a>(e) 函数类型</h5><h5 id="f-结构化类型-struct"><a href="#f-结构化类型-struct" class="headerlink" title="(f) 结构化类型(struct)"></a>(f) 结构化类型(struct)</h5><h5 id="g-接口类型（interface）"><a href="#g-接口类型（interface）" class="headerlink" title="(g) 接口类型（interface）"></a>(g) 接口类型（interface）</h5><h5 id="h-Map-类型"><a href="#h-Map-类型" class="headerlink" title="(h) Map 类型"></a>(h) Map 类型</h5>
+
+<h5 id="g-接口类型（interface）"><a href="#g-接口类型（interface）" class="headerlink" title="(g) 接口类型（interface）"></a>(g) 接口类型（interface）</h5><h5 id="h-Map-类型"><a href="#h-Map-类型" class="headerlink" title="(h) Map 类型"></a>(h) Map 类型</h5><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://go.dev/tour/welcome/1">A Tour of Go</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://golang.iswbm.com/">Go编程时光</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.runoob.com/go/go-tutorial.html">RUNOOB</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiujuan/p/16014608.html#2090222360">九卷技术录</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
             </div>
             <hr>
             <div>
@@ -596,6 +646,23 @@
                 
               </div>
               
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/e1e00902.html">
+                        <span class="hidden-mobile">应用DCT实现对音频水印的添加和提取</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 
