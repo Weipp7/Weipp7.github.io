@@ -1,0 +1,575 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/bg/panda.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Weipp">
+  <meta name="keywords" content="">
+  
+  <title>QtCreator中C++调用python的方法 - Weipp&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/gundongtiao.css# 滚动条颜色.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/shubiao.css# 鼠标指针.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":100,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Weipp's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                文章
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/archives/">
+                    <i class="iconfont icon-archive-fill"></i>
+                    归档
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于我
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://user-images.githubusercontent.com/73998546/200184826-24d10755-ae92-4248-b75a-36ff5d193e90.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="QtCreator中C++调用python的方法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-11-07 01:11" pubdate>
+        2022年11月7日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">QtCreator中C++调用python的方法</h1>
+            
+            <div class="markdown-body">
+              <h2 id="QtCreator中C-调用python的方法"><a href="#QtCreator中C-调用python的方法" class="headerlink" title="QtCreator中C++调用python的方法"></a>QtCreator中C++调用python的方法</h2><blockquote>
+<p>软工课程的界面使用QT做的，而其中核心的情感预测是python写的，模块融合的时候需要C++和python混合编程。在配置的过程中踩了不少坑，特此记录警醒后人😭</p>
+</blockquote>
+<h3 id="1-在qtcreator中创建-qt-application"><a href="#1-在qtcreator中创建-qt-application" class="headerlink" title="1. 在qtcreator中创建 qt application"></a>1. 在qtcreator中创建 qt application</h3><p>项目选择无所谓的，对是否成功配置没什么影响</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200183295-909ed01a-b080-4fca-b398-b5f2b5665ae2.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-修改c-文件"><a href="#2-修改c-文件" class="headerlink" title="2. 修改c++文件"></a>2. 修改c++文件</h3><p>修改main.cpp文件如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QCoreApplication&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;Python.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">QCoreApplication <span class="hljs-title">a</span><span class="hljs-params">(argc, argv)</span></span>;<br><br>    <span class="hljs-built_in">Py_Initialize</span>();<br>    <span class="hljs-keyword">if</span> ( !<span class="hljs-built_in">Py_IsInitialized</span>() )<br>    &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    PyObject* pModule = <span class="hljs-built_in">PyImport_ImportModule</span>(<span class="hljs-string">&quot;test_py&quot;</span>);  <span class="hljs-comment">// 这里的test_py就是创建的python文件</span><br>    <span class="hljs-keyword">if</span> (!pModule) &#123;<br>            cout&lt;&lt; <span class="hljs-string">&quot;Cant open python file!\n&quot;</span> &lt;&lt; endl;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>        &#125;<br>   PyObject* pFunhello= <span class="hljs-built_in">PyObject_GetAttrString</span>(pModule,<span class="hljs-string">&quot;hello&quot;</span>);  <span class="hljs-comment">// 这里的hellow就是python文件定义的函数</span><br>    <span class="hljs-keyword">if</span>(!pFunhello)&#123;<br>        cout&lt;&lt;<span class="hljs-string">&quot;Get function hello failed&quot;</span>&lt;&lt;endl;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-built_in">PyObject_CallFunction</span>(pFunhello,<span class="hljs-literal">NULL</span>);<br>    <span class="hljs-built_in">Py_Finalize</span>();<br>   <span class="hljs-keyword">return</span> a.<span class="hljs-built_in">exec</span>();<br>&#125;<br><br><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="3-修改-pro文件"><a href="#3-修改-pro文件" class="headerlink" title="3. 修改.pro文件"></a>3. 修改.pro文件</h3><h6 id="pro"><a href="#pro" class="headerlink" title="pro"></a>pro</h6><p>这里有两种方式进行修改：</p>
+<p>方法一 添加外部库进行修改</p>
+<p>1.右键项目名称添加库</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200183678-f22a0089-a0fa-49b3-ab05-508045349a52.png" srcset="/img/loading.gif" lazyload></p>
+<p>2.选择外部库</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200183442-a9030c18-504f-4444-aa5a-09f4358a072d.png" srcset="/img/loading.gif" lazyload></p>
+<p>3.库文件和包含路径如图所示</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200183758-8431c752-4b97-47b6-a7a8-71399942c432.png" srcset="/img/loading.gif" lazyload></p>
+<p>库文件是本地python文件夹下的lib文件，具体路径如图所示</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200183933-d66b24ff-8d15-4443-90b1-db911fb906ca.png" srcset="/img/loading.gif" lazyload></p>
+<p>包含路径是这样的</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200183943-cd65b362-2353-4c92-9e8e-17287733037e.png" srcset="/img/loading.gif" lazyload></p>
+<p>点击下一步，完成即可</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184028-a221b2b9-f54c-4151-8cf9-b659b27032d9.png" srcset="/img/loading.gif" lazyload></p>
+<p>此时你的.pro文件里增加了如下代码：</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">win32:CONFIG(release, debug|release): LIBS += -L$<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/</span>libs/ -lpython310<br><span class="hljs-keyword">else</span>:win32:CONFIG(debug, debug|release): LIBS += -L$<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/</span>libs/ -lpython310d<br><br>INCLUDEPATH += $<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/i</span>nclude<br>DEPENDPATH += $<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/i</span>nclude<br><br>win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/</span>libs/libpython310.a<br><span class="hljs-keyword">else</span>:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/</span>libs/libpython310d.a<br><span class="hljs-keyword">else</span>:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/</span>libs/python310.lib<br><span class="hljs-keyword">else</span>:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/</span>libs/python310d.lib<br></code></pre></div></td></tr></table></figure>
+
+<p>但在这其中有些代码中涉及的库文件是本地不存在的，所以需要进行修改。只保留<strong>LIBS</strong>和<strong>INCLUDEPATH</strong>的路径，其余的注释掉。如图所示</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184083-54bd0925-bb4f-4e65-b62d-e95f5d5d9cc1.png" srcset="/img/loading.gif" lazyload></p>
+<p>方法二 手动添加代码</p>
+<p>在.pro文件的最后加上：</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">LIBS += -L$<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/</span>libs/ -lpython310<br><br>INCLUDEPATH += $<span class="hljs-variable">$PWD</span><span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/../</span>software<span class="hljs-regexp">/python3.9.15/i</span>nclude<br></code></pre></div></td></tr></table></figure>
+
+<p>注意这些路径要改为自己python的路径 </p>
+<p>lpython310是libs文件夹下python310.dll库文件</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184141-a47394fe-57bd-4d53-a90a-2ec982de76e8.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-添加python文件"><a href="#4-添加python文件" class="headerlink" title="4. 添加python文件"></a>4. 添加python文件</h3><p>示例代码</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">hello</span>():</span><br>	<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;hello&quot;</span>)<br>hello()<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="5-构建运行程序"><a href="#5-构建运行程序" class="headerlink" title="5.构建运行程序"></a>5.构建运行程序</h3><p>注意构建运行时一定要选对编译模式和对应机器的位数</p>
+<p>（哥们选择的是64位和debug运行模式）</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184211-f9a17be5-442c-4f9c-97c1-56717ee4157b.png" srcset="/img/loading.gif" lazyload></p>
+<p>哥们的文件在32位gcc编译模式下就会报一堆错，切记切记！</p>
+<p>至于选择debug还是release模式，网上参考的博客说release模式成功的可能性大。哥们两种模式都尝试了，全部构建成功。这个大伙自行斟酌。</p>
+<p>此时程序会报一些错误，不要慌张，这些坑哥们都已经踩过了</p>
+<p>在运行程序后，qt会自动构建debug文件夹</p>
+<p>此时可以在项目中添加新文件，路径选择为debug文件夹，文件就是刚刚的python文件。换句话说，这一步就是将<strong>python文件放置于和exe文件相同的文件夹下</strong>。我的路径为</p>
+<blockquote>
+<p>D:\my_code\QTDemo\Python&amp;QT\SoftwareEngineering-NLP-Model\build-DEMO-Desktop_Qt_5_14_2_MinGW_64_bit-Debug\debug</p>
+</blockquote>
+<p>你以为只添加python文件就够了吗？非也非也</p>
+<p>网上的博客通常讲到这一步就结束了，我跟到这一步后发现自己的python文件依旧跑不起来，而且报错显示的是python路径问题，长这个样子。</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184324-93b04493-e2f1-4ad1-9e1d-86168f2baaba.png" srcset="/img/loading.gif" lazyload></p>
+<p>仔细分析一下sys.path，发现所有路径文件中好像dll的库文件没有引入，故尝试将dll文件复制进debug文件夹，故障解决。呦吼！这些文件需要到下载的python文件夹中找。</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184347-778ce569-cf42-4fd9-bace-7ed4b1b3c192.png" srcset="/img/loading.gif" lazyload></p>
+<p>需要提醒一点的是，在进行上面的修改后，需要保存文件。然后需要执行<strong>qmake，构建，运行</strong>步骤。这样整个工程才会保留这些更改重新开始构建。</p>
+<h2 id="可能遇到的问题及解决"><a href="#可能遇到的问题及解决" class="headerlink" title="可能遇到的问题及解决"></a>可能遇到的问题及解决</h2><h3 id="1-找不到python-h"><a href="#1-找不到python-h" class="headerlink" title="1. 找不到python.h"></a>1. 找不到python.h</h3><p>原因是我们在c++中使用了这个头文件，但没有添加相应的python动态链接库</p>
+<p>解决方法：内容详情请见<a href="#pro">修改.pro文件</a></p>
+<h3 id="2-error-C2238-意外的标记位于“-”之前"><a href="#2-error-C2238-意外的标记位于“-”之前" class="headerlink" title="2. error: C2238: 意外的标记位于“;”之前"></a>2. error: C2238: 意外的标记位于“;”之前</h3><p>原因是QT中定义了slots作为关键了，而python3中有使用slot作为变量，所以有冲突。</p>
+<p>解决方法：在python的object.h中 slots冲突，因此修改object.h，我的object.h路径：</p>
+<blockquote>
+<p>D:\software\python3.9.15\include\object.h</p>
+</blockquote>
+<p>修改如下</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184529-fcdeb259-e1ce-425f-9b09-099ee566f0a1.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>3. 编译时没有错误，运行时出现“cant open python file!”</strong></p>
+<p>可能原因</p>
+<p>1.是生成的exe文件和test_py.py文件不在同一个文件夹里，只要手动将test_py.py拷贝到exe文件同级目录下即可。</p>
+<p>2.前面的调用只引入了内部package的python程序是可以的，但是如果需要调用外部的package，那么就会出现无法打开py文件的情况。</p>
+<p>如果需要引入别的一些package的话，就需要将所需要的package文件复制到QT工程目录的debug文件夹下（根据自身情况选择debug或者release），例如我的工程项目需要引入numpy，keras和tensorflow的包，如下：</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184585-2cc783b8-d2db-47a4-9f1c-68c918b6b477.png" srcset="/img/loading.gif" lazyload></p>
+<p>这些包来自于下载的python文件夹下，我的路径为：</p>
+<blockquote>
+<p>D:\software\python3.9.15\Lib\site-packages</p>
+</blockquote>
+<p>可以根据自己的工程需要进行添加</p>
+<p>这玩意的配置就无限踩坑，还好最后成功啦！最后放上运行成功截图✨✨✨</p>
+<p><img src="https://user-images.githubusercontent.com/73998546/200184611-256c330d-a253-43af-a0cb-23f5894ec4c6.png" srcset="/img/loading.gif" lazyload></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/4a79e44f.html">
+                        <span class="hidden-mobile">Go入门与实战</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"83dd2a243bcbd843a05a","clientSecret":"a302ebbd1e331a879fae28f46397391604cfcf4e","repo":"gitalk","owner":"Weipp7","admin":["Weipp7"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":false,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.href","title":"document.title"},
+          {
+            id: '2a4b7098a9683979d8369fdcd9d97f95'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <div class="copyright">©2021 By Weipp</div> <p id="run_time"></p> <script type="text/javascript" src="js/time.js"></script>
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/jingtaisidai.js"></script>
+<script src="//cdn.jsdelivr.net/gh/kaygb/JS-effects/fireworks.js"></script>
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
