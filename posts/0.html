@@ -18,7 +18,7 @@
   <meta name="author" content="Weipp">
   <meta name="keywords" content="">
   
-  <title>Weipp&#39;s blog</title>
+  <title>ConfZNS分析 - Weipp&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -179,12 +179,12 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/panda.jpg') no-repeat center center;
+         style="background: url('https://github.com/Weipp7/picture/assets/73998546/48370dd9-54f9-4400-b44a-d1ae6d30500a') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="">
+            <span class="h2" id="subtitle" title="ConfZNS分析">
               
             </span>
 
@@ -194,8 +194,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2023-07-22 17:47" pubdate>
-        2023年7月22日 下午
+      <time datetime="2023-07-22 21:28" pubdate>
+        2023年7月22日 晚上
       </time>
     </span>
   
@@ -254,7 +254,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none"></h1>
+            <h1 style="display: none">ConfZNS分析</h1>
             
             <div class="markdown-body">
               <p>最近的学校项目涉及ZNS（Zone NameSpace）SSD，需要我们了解ZNS的实现机制以及confZNS的原理，其中涉及的知识之庞杂，代码量之多，非我等小可所能完全吸收。在这里浅浅分析一下。</p>
@@ -345,7 +345,7 @@
 </li>
 <li><p>Zoned Block Device：Zoned Block Device是一个抽象层，用于将ZNS架构与主机系统的块设备接口对接。它负责将传统的块设备操作转换为Zone的顺序写入操作。Zoned Block Device可以通过读取Zone Report来确定Zone的写入状态，并将数据按照Zone的规则进行写入，以保证数据的顺序写入特性。</p>
 <p><img src="../img/confZNS/zone.png" srcset="/img/loading.gif" lazyload alt="zone"></p>
-<p> <img src="../img/confZNS/zns_architecture.png" srcset="/img/loading.gif" lazyload title="zns_architecture"></p>
+<p><img src="../img/confZNS/zns_architecture.png" srcset="/img/loading.gif" lazyload title="zns_architecture"></p>
 </li>
 </ol>
 <p>ZNS架构的工作原理是，主机系统通过Zoned Block Device进行数据的写入和读取操作，而Zoned Block Device则利用Zone Management来管理Zone的状态，并保证数据的顺序写入。在写入过程中，主机将数据写入当前打开的Zone，当Zone写满后，Zone Management会自动关闭当前Zone并打开下一个空闲的Zone，从而实现数据的连续写入。当Zone已经关闭且不再接受数据时，主机需要通过Zone Report获取新的可写Zone，并继续写入数据。</p>
@@ -375,7 +375,7 @@
 <p>在代码中，<code>zns_exit</code>函数的函数体是空的，即没有实际的释放资源操作。这可能是因为在当前的代码实现中，并没有为 ZNS 模式分配额外的资源（例如 Zones），或者在控制器退出时不需要特定的资源清理操作。根据参考代码中的数据结构，合理补充 <code>zns_exit</code> 函数如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">zns_exit</span><span class="hljs-params">(FemuCtrl *n)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">zns_ssd</span> *<span class="hljs-title">zns</span> =</span> n-&gt;zns;<br>    <span class="hljs-keyword">if</span> (zns) &#123;<br>        <span class="hljs-comment">// 释放掉分配给每个 Zone 的资源</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; zns-&gt;num_ch; i++) &#123;<br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">zns_ch</span> *<span class="hljs-title">ch</span> =</span> &amp;zns-&gt;ch[i];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; zns-&gt;num_lun; j++) &#123;<br>                <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">zns_fc</span> *<span class="hljs-title">fc</span> =</span> &amp;ch-&gt;fc[j];<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">32</span>; k++) &#123;<br>                    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">zns_blk</span> *<span class="hljs-title">blk</span> =</span> &amp;fc-&gt;blk[k];<br>                    <span class="hljs-comment">// 可根据实际分配情况来释放 Zone 相关资源</span><br>                    <span class="hljs-comment">// 例如 blk-&gt;data 指向的数据缓冲区等</span><br>                    <span class="hljs-built_in">g_free</span>(blk-&gt;data);<br>                &#125;<br>                <span class="hljs-built_in">g_free</span>(fc-&gt;blk);<br>            &#125;<br>            <span class="hljs-built_in">g_free</span>(ch-&gt;fc);<br>        &#125;<br>        <span class="hljs-built_in">g_free</span>(zns-&gt;ch);<br>        <span class="hljs-built_in">g_free</span>(zns);<br>        n-&gt;zns = <span class="hljs-literal">NULL</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 清理其他需要释放的资源，例如控制器可能分配的其他数据结构等</span><br><br>    <span class="hljs-comment">// 取消特定设置，例如恢复控制器配置到默认状态</span><br><br>    <span class="hljs-comment">// 如果还有其他需要释放的资源，继续在此处添加相应的代码</span><br><br>    <span class="hljs-comment">// 最后，确保将所有可能导致资源泄漏的指针设置为 NULL，以避免悬挂指针的问题</span><br>&#125;<br><br></code></pre></div></td></tr></table></figure>
 
-<h4 id="2-ZNS结构"><a href="#2-ZNS结构" class="headerlink" title="2. ZNS结构"></a>2. ZNS结构</h4><h5 id="逻辑页和物理页的映射"><a href="#逻辑页和物理页的映射" class="headerlink" title="* 逻辑页和物理页的映射"></a>* 逻辑页和物理页的映射</h5><p>ZNS的映射是指在ZNS SSD中逻辑页与物理页之间的关联。ZNS SSD将存储空间划分为多个zone，每个区域包含一组逻辑页。映射关系决定了逻辑页如何映射到物理页，从而影响了ZNS设备的性能。</p>
+<h4 id="2-ZNS结构"><a href="#2-ZNS结构" class="headerlink" title="2. ZNS结构"></a>2. ZNS结构</h4><h5 id="逻辑页和物理页的映射"><a href="#逻辑页和物理页的映射" class="headerlink" title="逻辑页和物理页的映射"></a>逻辑页和物理页的映射</h5><p>ZNS的映射是指在ZNS SSD中逻辑页与物理页之间的关联。ZNS SSD将存储空间划分为多个zone，每个区域包含一组逻辑页。映射关系决定了逻辑页如何映射到物理页，从而影响了ZNS设备的性能。</p>
 <p>ZNS SSD的映射可以分为三种类型：单一并行单元映射（SU-zone）、多个并行单元映射（MU-zone）和全部并行单元映射（FU-zone）。在SU-zone映射中，一个区域仅映射到一个并行单元，而在FU-zone映射中，一个区域可以利用所有的并行单元。MU-zone映射介于两者之间，一个区域映射到多个并行单元。</p>
 <p>ZNS SSD的映射由ZNS架构进行管理。首先，ZNS架构构建一个用户配置的通道-路组织结构。然后，它建立一个映射函数或表来关联区域和并行单元。大多数情况下，使用映射函数，但在映射比较复杂时，ConfZNS使用映射表。例如，当配置硬件以支持单个设备内的混合映射时，ConfZNS使用映射表。</p>
 <p><img src="../img/confZNS/spectrum.png" srcset="/img/loading.gif" lazyload alt="spectrum"></p>
@@ -412,6 +412,13 @@
             <div>
               <div class="post-metas mb-3">
                 
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/SSD-ZNS/">SSD & ZNS</a>
+                    
+                  </div>
                 
               </div>
               
