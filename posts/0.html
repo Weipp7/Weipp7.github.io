@@ -206,7 +206,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      8.5k 字
+      9.1k 字
     </span>
   
 
@@ -216,7 +216,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      101
+      108
        分钟
     </span>
   
@@ -414,16 +414,33 @@
 <p>时间估算器通过层级时钟算法来识别资源争用和等待请求的数量。它使用两个时钟，一个是全局时钟（𝑔𝑐），一个是局部时钟（𝑙𝑐）。全局时钟以每个时钟周期递增，而局部时钟是为每个资源分配的。局部时钟被设置为相关资源的下一个可用时间。当请求到达资源时，将相关资源的局部时钟设置为𝑙𝑐 = 𝑚𝑎𝑥 (𝑔𝑐,𝑙𝑐) + service_time，即下一个可用时间。</p>
 <p>全局时钟和局部时钟满足以下性质：如果局部时钟小于等于全局时钟，则与局部时钟相关的资源处于空闲状态。否则，该资源正在忙碌状态。我们还可以通过两个时钟的差异来确定等待请求的数量。例如，假设某个资源的服务时间为2，并且全局时钟和局部时钟都为0。经过1个时钟周期后，如果没有请求到达该资源，全局时钟变为1，而局部时钟仍为0，这意味着该资源处于空闲状态。如果有请求到达该资源，局部时钟变为3，这意味着该资源在全局时钟为3之前都处于忙碌状态。</p>
 <p>以读取请求和写入请求的延迟估计为例，ConfZNS利用逻辑页号（LPN）和物理页号（PPN）来估算延迟时间。在不同的区域映射下，LPN和PPN的对应关系不同，从而影响延迟时间的估计。</p>
-<p><img src="../img/confZNS/time_estimate.png" srcset="/img/loading.gif" lazyload alt="1690091183998"></p>
-<p>翻一下<a target="_blank" rel="noopener" href="https://github.com/vtess/FEMU/blob/master/hw/femu/zns/zns.c">源码</a>：</p>
+<p><img src="../img/confZNS/time_estimate.png" srcset="/img/loading.gif" lazyload alt="time_estimate"></p>
+<p>翻一下<a target="_blank" rel="noopener" href="https://github.com/vtess/FEMU/blob/master/hw/femu/zns/zns.c">源码</a>，femu实现：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// 用于计算NAND命令的执行时间。</span><br><span class="hljs-comment">// 根据传入的NAND命令类型（NAND_READ、NAND_WRITE或NAND_ERASE），以及SSD的读写延迟和擦除延迟，计算出NAND命令的执行时间（lat）。</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">uint64_t</span> <span class="hljs-title">zns_advance_status</span><span class="hljs-params">(FemuCtrl *n, struct nand_cmd *ncmd, struct ppa *ppa)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> c = ncmd-&gt;cmd;<br><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">zns_ssd</span> *<span class="hljs-title">zns</span> =</span> n-&gt;zns;<br>    <span class="hljs-keyword">uint64_t</span> nand_stime;<br>    <span class="hljs-keyword">uint64_t</span> req_stime = (ncmd-&gt;stime == <span class="hljs-number">0</span>) ? \<br>        <span class="hljs-built_in">qemu_clock_get_ns</span>(QEMU_CLOCK_REALTIME) : ncmd-&gt;stime;<br><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">zns_fc</span> *<span class="hljs-title">fc</span> =</span> <span class="hljs-built_in">get_fc</span>(zns, ppa);<br><br>    <span class="hljs-keyword">uint64_t</span> lat = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">uint64_t</span> read_delay = n-&gt;zns_params.zns_read;<br>    <span class="hljs-keyword">uint64_t</span> write_delay = n-&gt;zns_params.zns_write;<br>    <span class="hljs-keyword">uint64_t</span> erase_delay = <span class="hljs-number">2000000</span>;<br><br>    <span class="hljs-built_in"><span class="hljs-keyword">switch</span></span> (c) &#123;<br>    <span class="hljs-keyword">case</span> NAND_READ:<br>        nand_stime = (fc-&gt;next_fc_avail_time &lt; req_stime) ? req_stime : \<br>                     fc-&gt;next_fc_avail_time;<br>        fc-&gt;next_fc_avail_time = nand_stime + read_delay;<br>        lat = fc-&gt;next_fc_avail_time - req_stime;<br>	    <span class="hljs-keyword">break</span>;<br><br>    <span class="hljs-keyword">case</span> NAND_WRITE:<br>	    nand_stime = (fc-&gt;next_fc_avail_time &lt; req_stime) ? req_stime : \<br>		            fc-&gt;next_fc_avail_time;<br>	    fc-&gt;next_fc_avail_time = nand_stime + write_delay;<br>	    lat = fc-&gt;next_fc_avail_time - req_stime;<br>	    <span class="hljs-keyword">break</span>;<br><br>    <span class="hljs-keyword">case</span> NAND_ERASE:<br>        nand_stime = (fc-&gt;next_fc_avail_time &lt; req_stime) ? req_stime : \<br>                        fc-&gt;next_fc_avail_time;<br>        fc-&gt;next_fc_avail_time = nand_stime + erase_delay;<br>        lat = fc-&gt;next_fc_avail_time - req_stime;<br>        <span class="hljs-keyword">break</span>;<br><br>    <span class="hljs-keyword">default</span>:<br>        <span class="hljs-comment">/* To silent warnings */</span><br>        ;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> lat;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
-
 
 <p>NAND闪存是SSD中常见的存储介质，其读写和擦除操作需要通过特定的NAND命令来执行。常见的NAND命令包括读取（NAND_READ）、写入（NAND_WRITE）和擦除（NAND_ERASE）。</p>
 <p>计算NAND命令的执行时间是为了模拟SSD的读写延迟和擦除延迟，从而更真实地模拟SSD的性能表现。在实际的SSD中，NAND闪存芯片执行不同操作的时间存在差异，例如，读取速度通常较快，写入速度较慢，而擦除速度较为缓慢。这些延迟会影响到SSD的整体性能和数据访问效率。</p>
 <p>通过计算NAND命令的执行时间，代码可以在模拟的SSD中引入实际的读写延迟和擦除延迟，以便更准确地模拟SSD的行为。</p>
-<h4 id="4-资源监视器"><a href="#4-资源监视器" class="headerlink" title="4. 资源监视器"></a>4. 资源监视器</h4><p>资源监视器收集各种ZNS SSD内部的统计数据，如各通道和路的利用率，有助于分析SSD的I/O分布能力和功耗。此外，它还报告各个单位的块擦除计数和I/O请求的来源（NVMe提交队列标识符）等内部数据。<br>总之，ZNS的组成包括ZNS配置器、ZNS结构、时间估算器和资源监视器。这些组件共同构成了ConfZNS这个用于仿真和研究ZNS SSD的工具。</p>
+<p>confZNS的实现<a target="_blank" rel="noopener" href="https://github.com/DKU-StarLab/ConfZNS/blob/master/hw/femu/zns/zns.c">code</a>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">zns_advance_status</span><span class="hljs-params">(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)</span></span>&#123;<br>  <br>    NvmeRwCmd *rw = (NvmeRwCmd *)&amp;req-&gt;cmd;<br>    <span class="hljs-keyword">uint8_t</span> opcode = rw-&gt;opcode;<br>    <span class="hljs-keyword">uint32_t</span> dw13 = <span class="hljs-built_in">le32_to_cpu</span>(cmd-&gt;cdw13);<br><br>    <span class="hljs-keyword">uint8_t</span> action;<br>    action = dw13 &amp; <span class="hljs-number">0xff</span>;<br><br>    <span class="hljs-comment">// Zone Reset </span><br>    <span class="hljs-keyword">if</span> (action == NVME_ZONE_ACTION_RESET)&#123;<br>        <span class="hljs-comment">//reset zone-&gt;wp and zone-&gt;status=Empty</span><br>        <span class="hljs-comment">//reset zone, causing every chip lat +</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">znssd_reset_zones</span>(n-&gt;zns,req);<br>    &#125;<br>    <span class="hljs-comment">// Read, Write </span><br>    <span class="hljs-built_in">assert</span>(opcode == NVME_CMD_WRITE || opcode == NVME_CMD_READ || opcode == NVME_CMD_ZONE_APPEND);<br>    <span class="hljs-keyword">if</span>(req-&gt;is_write)<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">znsssd_write</span>(n-&gt;zns, req);<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">znsssd_read</span>(n-&gt;zns, req);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>这段代码是针对 NVMe命名空间进行管理的函数，主要处理读写请求，并对 NVMe 命令进行处理以实现模拟的时延。具体功能如下：</p>
+<p>首先，从 NVMe 命令结构中解析出相关信息，如读/写命令、操作码等。</p>
+<p>根据操作码执行相应操作：</p>
+<ul>
+<li>如果是 <code>NVME_ZONE_ACTION_RESET</code>，则调用 <code>znssd_reset_zones</code> 函数来重置 zone，将 zone 的写指针（wp）和状态（status）重置，并将其状态设置为空（Empty）。</li>
+<li>对于读（<code>NVME_CMD_READ</code>）和写（<code>NVME_CMD_WRITE</code>）命令，根据 <code>req-&gt;is_write</code> 来判断是执行读还是写操作，并调用相应的函数 <code>znsssd_write</code> 或 <code>znsssd_read</code> 来处理读写请求。</li>
+</ul>
+<p>为什么 ConfZNS 更加准确，而 FEMU 存在问题：</p>
+<ul>
+<li>ConfZNS 使用 NVMe 命名空间模拟，因此其时延模拟更加细粒度，同时根据请求的不同类型进行区分处理。这种精细的时延模拟可以更好地反映真实的 SSD 设备行为，因为现代 SSD 设备通常支持多种操作，如读、写、擦除、重置等，并且每种操作都有自己特定的时延特征。</li>
+<li>FEMU 虽然提供了时延模拟，但其延迟设置是硬编码的，没有考虑实际 SSD 设备的特性和不同操作之间的时序关系。这可能导致模拟的结果与真实设备的行为不一致，特别是当 SSD 设备具有复杂的内部状态转换和时序要求时，FEMU 的模拟可能会产生不准确的结果。</li>
+</ul>
+<p>综上所述，尽管两者都提供了一种形式的时延模拟，但 ConfZNS 更加准确和灵活，因为它模拟了更细粒度的 NVMe 命令，并根据不同请求类型进行区分处理。而 FEMU 的模拟虽然可行，但在时延设置上相对简单且不够准确，可能无法完全符合真实 SSD 设备的行为。</p>
+<ol start="4">
+<li>资源监视器</li>
+</ol>
+<p>资源监视器收集各种ZNS SSD内部的统计数据，如各通道和路的利用率，有助于分析SSD的I/O分布能力和功耗。此外，它还报告各个单位的块擦除计数和I/O请求的来源（NVMe提交队列标识符）等内部数据。<br>总之，ZNS的组成包括ZNS配置器、ZNS结构、时间估算器和资源监视器。这些组件共同构成了ConfZNS这个用于仿真和研究ZNS SSD的工具。</p>
 <h2 id="运行confZNS"><a href="#运行confZNS" class="headerlink" title="运行confZNS"></a>运行confZNS</h2><p>主要操作就是拉取<a target="_blank" rel="noopener" href="https://github.com/DKU-StarLab/ConfZNS/">ConfZNS源码</a>，按照readme来配置相关运行环境，成功运行该仿真器并能跑OS就可以了。（指能运行./run-zns.sh）。</p>
 <p>然而呢，配置之路并不是一帆风顺的，在此简短记录一下我的采坑过程😭</p>
 <p><strong>OS限制</strong></p>
@@ -434,7 +451,7 @@
 <li><p>在 WSL 终端中，使用以下命令编译测试程序：<code>gcc -o aio_test aio_test.c -laio </code></p>
 </li>
 <li><p>运行编译后的测试程序：<code>./aio_test </code></p>
-<p>好嘛，输出的果真是<code>AIO is not supported on this system.</code></p>
+<p>好嘛，输出的果真是 <code>AIO is not supported on this system.</code></p>
 </li>
 </ol>
 <p>在这个时候其实我对FEMU还有些疑问，我既然已经成功编译了FEMU，导入.qcow2的镜像是为了什么呢？</p>
